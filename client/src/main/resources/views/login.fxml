@@ -14,11 +14,11 @@
             prefWidth="600.0"
             xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.course.client.controllers.LoginController">
+            fx:controller="controllers.LoginController">
    <children>
       <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" smooth="false">
          <image>
-            <Image url="@../../../../pictures/BackgroundLogin.png" />
+            <Image url="@../pictures/BackgroundLogin.png" />
          </image>
       </ImageView>
       <VBox alignment="CENTER" layoutX="50.0" layoutY="75.0" prefHeight="250.0" prefWidth="200.0" spacing="25.0">
