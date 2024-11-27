@@ -13,5 +13,5 @@ public class ScheduleDTO implements Serializable {
     private String dayOfWeek;
     private Time startTime;
     private Time endTime;
-    private long masterId;
+    private MasterDTO masterDTO;
 }
