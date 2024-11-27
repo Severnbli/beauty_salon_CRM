@@ -1,4 +1,4 @@
-package models;
+package models.dto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -8,7 +8,7 @@ import java.sql.Time;
 
 @Builder
 @Data
-public class Schedule implements Serializable {
+public class ScheduleDTO implements Serializable {
     private long id;
     private String dayOfWeek;
     private Time startTime;

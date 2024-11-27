@@ -1,4 +1,4 @@
-package models;
+package models.dto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Builder
 @Data
-public class User implements Serializable {
+public class UserDTO implements Serializable {
     private long id;
     private String login;
     private String password;
