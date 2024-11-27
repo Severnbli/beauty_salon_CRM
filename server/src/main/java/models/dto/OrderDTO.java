@@ -12,7 +12,7 @@ public class OrderDTO implements Serializable {
     private long id;
     private Timestamp date;
     private String status;
-    private long masterId;
-    private long clientId;
-    private long serviceId;
+    private MasterDTO master;
+    private UserDTO client;
+    private ServiceDTO service;
 }
