@@ -1,4 +1,4 @@
-package models;
+package models.dto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 
 @Builder
 @Data
-public class Order implements Serializable {
+public class OrderDTO implements Serializable {
     private long id;
     private Timestamp date;
     private String status;
