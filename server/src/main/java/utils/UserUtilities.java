@@ -1,8 +1,8 @@
 package utils;
 
 import db.services.UserService;
-import models.tcp.Request;
-import models.tcp.Response;
+import tcp.Request;
+import tcp.Response;
 
 public class UserUtilities {
     private UserService userService = new UserService();
