@@ -1,4 +1,4 @@
-package db.compoundIdentifiers;
+package db.entities.compoundIdentifiers;
 
 import java.io.Serializable;
 import lombok.Data;

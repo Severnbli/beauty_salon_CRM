@@ -3,7 +3,7 @@ package db.dao;
 import java.util.List;
 
 public interface DAO<T> {
-    T findById(Long id);
+    T getById(Long id);
     void save(T entity);
     void delete(T entity);
     void update(T entity);
