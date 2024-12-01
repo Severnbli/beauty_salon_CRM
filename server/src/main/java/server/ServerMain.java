@@ -30,9 +30,15 @@ public class ServerMain {
                     "Client IP: " + clientSocket.getInetAddress() + ", PORT: " + clientSocket.getLocalPort() +
                     " connected!"
             );
-            ClientHandler client = new ClientHandler(clientSocket);
 
-            new Thread(client).start();
+            ClientHandler client;
+
+            try {
+                client = new ClientHandler(clientSocket);
+                new Thread(client).start();
+            } catch (IOException e) {
+                log.error("An error while creating a new client handler: " + e);
+            }
         }
     }
 
