@@ -1,4 +1,4 @@
-package models.tcp;
+package tcp;
 
 import enums.ResponseStatus;
 import lombok.AllArgsConstructor;
