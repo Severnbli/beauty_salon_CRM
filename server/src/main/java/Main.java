@@ -1,5 +1,6 @@
 import org.apache.log4j.Logger;
 import server.ServerMain;
+import services.DBService;
 
 import java.io.IOException;
 import java.util.logging.LogManager;
@@ -10,6 +11,7 @@ public class Main {
     public static void main(String[] args) {
         loadProperties();
         loadServer();
+        DBService.closeSessionFactory(); // Will be executed after server stop working
     }
 
     public static void loadServer() {
