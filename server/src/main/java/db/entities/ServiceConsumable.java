@@ -1,6 +1,6 @@
 package db.entities;
 
-import db.compoundIdentifiers.ServiceConsumableId;
+import db.entities.compoundIdentifiers.ServiceConsumableId;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;

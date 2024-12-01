@@ -1,6 +1,6 @@
 package db.entities;
 
-import db.compoundIdentifiers.MasterServiceId;
+import db.entities.compoundIdentifiers.MasterServiceId;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
