@@ -33,7 +33,6 @@ public class User {
     private String email;
 
     @ManyToOne
-    @ToString.Exclude
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 

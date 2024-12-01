@@ -17,13 +17,11 @@ import java.util.Objects;
 public class ServiceConsumable {
     @Id
     @ManyToOne
-    @ToString.Exclude
     @JoinColumn(name = "service_id", nullable = false)
     private Service service;
 
     @Id
     @ManyToOne
-    @ToString.Exclude
     @JoinColumn(name = "consumable_id", nullable = false)
     private Consumable consumable;
 

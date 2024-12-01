@@ -20,17 +20,14 @@ public class Order {
     private Long id;
 
     @ManyToOne
-    @ToString.Exclude
     @JoinColumn(name = "client_id", nullable = false)
     private User client;
 
     @ManyToOne
-    @ToString.Exclude
     @JoinColumn(name = "master_id", nullable = false)
     private Master master;
 
     @ManyToOne
-    @ToString.Exclude
     @JoinColumn(name = "service_id", nullable = false)
     private Service service;
 

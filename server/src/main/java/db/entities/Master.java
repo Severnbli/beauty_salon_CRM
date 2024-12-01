@@ -18,7 +18,6 @@ public class Master {
 
     @OneToOne
     @MapsId
-    @ToString.Exclude
     @JoinColumn(name = "id")
     private User user;
 
