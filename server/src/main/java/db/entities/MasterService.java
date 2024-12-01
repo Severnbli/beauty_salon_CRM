@@ -1,6 +1,6 @@
 package db.entities;
 
-import db.compoundIdentifiers.MasterServiceId;
+import db.entities.compoundIdentifiers.MasterServiceId;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
@@ -17,13 +17,11 @@ import java.util.Objects;
 public class MasterService {
     @Id
     @ManyToOne
-    @ToString.Exclude
     @JoinColumn(name = "master_id", nullable = false)
     private Master master;
 
     @Id
     @ManyToOne
-    @ToString.Exclude
     @JoinColumn(name = "service_id", nullable = false)
     private Service service;
 

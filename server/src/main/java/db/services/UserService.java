@@ -10,8 +10,8 @@ public class UserService implements DBService<User> {
     DAO<User> dao = new UserDAO();
 
     @Override
-    public User findById(Long id) {
-        return dao.findById(id);
+    public User getById(Long id) {
+        return dao.getById(id);
     }
 
     @Override

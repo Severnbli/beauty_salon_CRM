@@ -12,7 +12,7 @@ import java.util.List;
 
 public class UserDAO implements DAO<User> {
     @Override
-    public User findById(Long id) {
+    public User getById(Long id) {
         try (Session session = DBConnection.getSessionFactory().openSession()) {
             return session.get(User.class, id);
         }

@@ -20,7 +20,6 @@ public class Schedule {
     private Long id;
 
     @ManyToOne
-    @ToString.Exclude
     @JoinColumn(name = "master_id", nullable = false)
     private Master master;
 

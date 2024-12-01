@@ -1,6 +1,6 @@
 package db.entities;
 
-import db.compoundIdentifiers.ServiceConsumableId;
+import db.entities.compoundIdentifiers.ServiceConsumableId;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
@@ -17,13 +17,11 @@ import java.util.Objects;
 public class ServiceConsumable {
     @Id
     @ManyToOne
-    @ToString.Exclude
     @JoinColumn(name = "service_id", nullable = false)
     private Service service;
 
     @Id
     @ManyToOne
-    @ToString.Exclude
     @JoinColumn(name = "consumable_id", nullable = false)
     private Consumable consumable;
 
