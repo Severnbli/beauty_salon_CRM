@@ -1,4 +1,4 @@
-package models.tcp;
+package tcp;
 
 import enums.RequestType;
 import lombok.Data;
