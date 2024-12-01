@@ -1,8 +1,8 @@
 package server;
 
 import enums.ResponseStatus;
-import models.tcp.Request;
-import models.tcp.Response;
+import tcp.Request;
+import tcp.Response;
 import org.apache.log4j.Logger;
 import utils.UserUtilities;
 
