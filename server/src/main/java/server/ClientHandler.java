@@ -4,7 +4,7 @@ import enums.ResponseStatus;
 import tcp.Request;
 import tcp.Response;
 import org.apache.log4j.Logger;
-import utils.UserUtilities;
+import db.utils.UserUtilities;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

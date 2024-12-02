@@ -1,4 +1,4 @@
-package utils;
+package db.utils;
 
 import com.google.gson.Gson;
 import db.entities.User;
