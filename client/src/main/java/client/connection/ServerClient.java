@@ -1,5 +1,7 @@
 package client.connection;
 
+import client.tcp.Request;
+import client.tcp.Response;
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.Getter;
 
@@ -31,5 +33,14 @@ public class ServerClient {
         } catch (IOException e) {
             log.severe("Attempt of connection to server failed. Reason: " + e);
         }
+    }
+
+    public void sendRequest(Request request) throws IOException {
+        out.writeObject(request);
+        out.flush();
+    }
+
+    public Response getResponse() throws IOException, ClassNotFoundException {
+        return (Response) in.readObject();
     }
 }
