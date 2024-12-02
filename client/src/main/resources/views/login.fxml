@@ -14,7 +14,7 @@
             prefWidth="600.0"
             xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controllers.LoginController">
+            fx:controller="client.controllers.LoginController">
    <children>
       <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" smooth="false">
          <image>
