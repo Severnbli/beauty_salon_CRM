@@ -10,11 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0"
-            prefWidth="600.0"
-            xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="client.controllers.LoginController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controllers.LoginController">
    <children>
       <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" smooth="false">
          <image>
@@ -24,7 +20,7 @@
       <VBox alignment="CENTER" layoutX="50.0" layoutY="75.0" prefHeight="250.0" prefWidth="200.0" spacing="25.0">
          <children>
             <TextField fx:id="loginField" promptText="Логин" />
-            <TextField fx:id="PasswordField" promptText="Пароль" />
+            <TextField fx:id="passwordField" promptText="Пароль" />
             <Hyperlink fx:id="forgetPasswordLink" onAction="#onForgetPassword" text="Забыли пароль?" />
             <Button fx:id="btnLogin" mnemonicParsing="false" onAction="#onLogin" text="Войти в систему" />
             <Hyperlink fx:id="registerLink" onAction="#onRegister" text="Зарегистрироваться" />
