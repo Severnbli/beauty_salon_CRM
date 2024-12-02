@@ -9,7 +9,7 @@ import javafx.scene.text.Text;
 
 public class LoginController {
     @FXML
-    private TextField PasswordField;
+    private TextField passwordField;
 
     @FXML
     private Button btnLogin;
