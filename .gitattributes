@@ -1,8 +1,0 @@
-# Treat common photo formats as binary
-*.jpg binary
-*.jpeg binary
-*.png binary
-*.gif binary
-*.bmp binary
-*.tiff binary
-*.webp binary
