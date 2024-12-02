@@ -1,4 +1,4 @@
-module org.course.client {
+module client {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
@@ -10,6 +10,6 @@ module org.course.client {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
 
-    opens org.course.client to javafx.fxml;
-    exports org.course.client;
+    opens client.controllers to javafx.fxml;
+    exports client;
 }
