@@ -10,7 +10,7 @@ import java.net.Socket;
 
 @Getter
 public class ServerClient {
-    public static final ServerClient instance = new ServerClient();
+    private static final ServerClient instance = new ServerClient();
     private static Socket socket;
     private static ObjectInputStream in;
     private static ObjectOutputStream out;
