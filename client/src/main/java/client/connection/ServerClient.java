@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 public class ServerClient {
     private static final Logger log = Logger.getLogger(ServerClient.class.getName());
 
+    @Getter
     private static final ServerClient instance = new ServerClient();
     private Socket socket;
     private ObjectInputStream in;
