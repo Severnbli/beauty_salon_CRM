@@ -5,13 +5,14 @@ import tcp.Request;
 import tcp.Response;
 import org.apache.log4j.Logger;
 import db.utils.UserUtilities;
+import utils.Nullifable;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class ClientHandler implements Runnable {
+public class ClientHandler implements Runnable, Nullifable {
     private static final Logger log = Logger.getLogger(ClientHandler.class);
     private Socket socket;
     private Request request;
@@ -73,7 +74,13 @@ public class ClientHandler implements Runnable {
         sendResponse();
     }
 
-    private void close() {
+    private void sendResponse() throws IOException {
+        out.writeObject(response);
+        out.flush();
+    }
+
+    @Override
+    public void nullify() {
         try {
             in.close();
             out.close();
@@ -84,16 +91,14 @@ public class ClientHandler implements Runnable {
             socket = null;
             request = null;
             response = null;
+
             in = null;
             out = null;
+
+            userUtilities.nullify();
             userUtilities = null;
 
             System.gc();
         }
-    }
-
-    private void sendResponse() throws IOException {
-        out.writeObject(response);
-        out.flush();
     }
 }
