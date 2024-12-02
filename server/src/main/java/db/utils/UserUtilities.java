@@ -6,8 +6,9 @@ import db.services.UserService;
 import enums.ResponseStatus;
 import tcp.Request;
 import tcp.Response;
+import utils.Nullifable;
 
-public class UserUtilities {
+public class UserUtilities implements Nullifable {
     private UserService userService = new UserService();
     private Gson gson = new Gson();
 
@@ -32,5 +33,13 @@ public class UserUtilities {
 
     public void update(Request req, Response res) {
 
+    }
+
+    @Override
+    public void nullify() {
+        userService = null;
+        gson = null;
+
+        System.gc();
     }
 }
