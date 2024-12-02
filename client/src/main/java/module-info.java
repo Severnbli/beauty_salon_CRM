@@ -10,6 +10,7 @@ module client {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires static lombok;
+    requires io.github.cdimascio.dotenv.java;
 
     opens client.controllers to javafx.fxml;
     exports client;
