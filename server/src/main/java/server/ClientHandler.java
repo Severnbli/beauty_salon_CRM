@@ -45,7 +45,7 @@ public class ClientHandler implements Runnable, Nullifable {
                 log.error("Error while writing goodbye response: " + responseException);
             }
         } finally {
-            close();
+            nullify();
         }
     }
 
