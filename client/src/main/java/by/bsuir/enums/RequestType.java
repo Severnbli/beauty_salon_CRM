@@ -1,4 +1,4 @@
-package client.enums;
+package by.bsuir.enums;
 
 public enum RequestType {
     LOGIN,

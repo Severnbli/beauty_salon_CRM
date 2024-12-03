@@ -14,6 +14,6 @@ module client {
     requires com.google.gson;
     requires java.logging;
 
-    opens client.controllers to javafx.fxml;
-    exports client;
+    opens by.bsuir.client.controllers to javafx.fxml;
+    exports by.bsuir.client;
 }

@@ -1,4 +1,4 @@
-package client.models;
+package by.bsuir.client.models;
 
 import lombok.Builder;
 import lombok.Data;

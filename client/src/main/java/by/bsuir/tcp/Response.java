@@ -1,6 +1,6 @@
-package client.tcp;
+package by.bsuir.tcp;
 
-import client.enums.ResponseStatus;
+import by.bsuir.enums.ResponseStatus;
 import lombok.Data;
 
 @Data

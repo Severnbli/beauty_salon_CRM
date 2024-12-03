@@ -1,6 +1,6 @@
-package client.tcp;
+package by.bsuir.tcp;
 
-import client.enums.RequestType;
+import by.bsuir.enums.RequestType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

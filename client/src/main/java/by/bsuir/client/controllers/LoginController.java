@@ -1,11 +1,11 @@
-package client.controllers;
+package by.bsuir.client.controllers;
 
-import client.connection.ServerClient;
-import client.enums.RequestType;
-import client.enums.ResponseStatus;
-import client.models.User;
-import client.tcp.Request;
-import client.tcp.Response;
+import by.bsuir.client.connection.ServerClient;
+import by.bsuir.enums.RequestType;
+import by.bsuir.enums.ResponseStatus;
+import by.bsuir.client.models.User;
+import by.bsuir.tcp.Request;
+import by.bsuir.tcp.Response;
 import com.google.gson.Gson;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

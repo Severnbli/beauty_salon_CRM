@@ -1,7 +1,7 @@
-package client.connection;
+package by.bsuir.client.connection;
 
-import client.tcp.Request;
-import client.tcp.Response;
+import by.bsuir.tcp.Request;
+import by.bsuir.tcp.Response;
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.Getter;
 
