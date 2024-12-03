@@ -1,8 +1,8 @@
 package by.bsuir.client.controllers;
 
 import by.bsuir.client.connection.ServerClient;
-import by.bsuir.enums.RequestType;
-import by.bsuir.enums.ResponseStatus;
+import by.bsuir.tcp.RequestType;
+import by.bsuir.tcp.ResponseStatus;
 import by.bsuir.client.models.User;
 import by.bsuir.tcp.Request;
 import by.bsuir.tcp.Response;
