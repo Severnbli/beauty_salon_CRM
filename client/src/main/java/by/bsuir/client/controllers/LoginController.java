@@ -9,45 +9,46 @@ import by.bsuir.tcp.Response;
 import com.google.gson.Gson;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
+import javafx.scene.control.*;
 
-import java.io.IOException;
 import java.util.logging.Logger;
 
 public class LoginController {
     private static final Logger log = Logger.getLogger(LoginController.class.getName());
 
     @FXML
-    private TextField passwordField;
+    private Hyperlink forgotPasswordLink;
 
     @FXML
-    private Button btnLogin;
-
-    @FXML
-    private Text errorText;
-
-    @FXML
-    private Hyperlink forgetPasswordLink;
+    private Button loginButton;
 
     @FXML
     private TextField loginField;
 
     @FXML
-    private Hyperlink registerLink;
+    private PasswordField passwordField;
 
     @FXML
-    void onForgetPassword(ActionEvent event) {
+    private Button regButton;
+
+    @FXML
+    void onForgotPassword(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onRegister(ActionEvent event) {
 
     }
 
     @FXML
     void onLogin(ActionEvent event) {
         if (loginField.getText().isEmpty() || passwordField.getText().isEmpty()) {
-            errorText.setVisible(true);
-            errorText.setText("Please enter your login and password!");
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.WARNING)
+                    .header("Авторизация")
+                    .content("Заполните логин и пароль!")
+                    .build().realise();
             return;
         }
 
@@ -63,24 +64,28 @@ public class LoginController {
         try {
             ServerClient.getInstance().sendRequest(new Request(RequestType.LOGIN, "", gson.toJson(user)));
             response = ServerClient.getInstance().getResponse();
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (Exception e) {
             log.severe("Attempt of login failed: " + e);
-            errorText.setVisible(true);
-            errorText.setText("Login failed: something went wrong with server!");
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.ERROR)
+                    .header("Авторизация")
+                    .content("Ошибка: " + e + "!")
+                    .build().realise();
             return;
         }
 
         if (response.getStatus() == ResponseStatus.OK) {
-            errorText.setVisible(false);
-            errorText.setText("Login successful: " + gson.fromJson(response.getData(), User.class));
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.INFORMATION)
+                    .header("Авторизация")
+                    .content("Успех!")
+                    .build().realise();
         } else {
-            errorText.setVisible(true);
-            errorText.setText("Login failed: " + response.getMessage());
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.WARNING)
+                    .header("Авторизация")
+                    .header("Пользователя с введёнными данными не существует!")
+                    .build().realise();
         }
-    }
-
-    @FXML
-    void onRegister(ActionEvent event) {
-
     }
 }
