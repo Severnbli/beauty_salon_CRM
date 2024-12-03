@@ -11,6 +11,7 @@ module client {
     requires eu.hansolo.tilesfx;
     requires static lombok;
     requires io.github.cdimascio.dotenv.java;
+    requires com.google.gson;
     requires java.logging;
 
     opens client.controllers to javafx.fxml;
