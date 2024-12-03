@@ -22,6 +22,7 @@ public class DBConnection {
                         .addAnnotatedClass(Service.class)
                         .addAnnotatedClass(ServiceConsumable.class)
                         .addAnnotatedClass(User.class)
+                        .addAnnotatedClass(PersonData.class)
                         .buildSessionFactory();
             } catch (Exception e) {
                 log.error("Error while creating the session factory: ", e);
