@@ -1,7 +1,5 @@
 package by.bsuir.server.services;
 
-import by.bsuir.db.entities.*;
-
 import by.bsuir.server.db.entities.*;
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
