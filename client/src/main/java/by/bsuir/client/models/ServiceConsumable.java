@@ -1,13 +1,12 @@
 package by.bsuir.client.models;
 
-
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class Role {
+public class ServiceConsumable {
     Long id;
-    String name;
-    Integer accessLevel;
+    Service service;
+    Consumable consumable;
 }
