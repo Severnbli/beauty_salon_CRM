@@ -1,6 +1,5 @@
 package by.bsuir.server.db.entities;
 
-import by.bsuir.enums.DayOfWeek;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;

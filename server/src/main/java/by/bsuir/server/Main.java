@@ -1,4 +1,4 @@
-package by.bsuir;
+package by.bsuir.server;
 
 import org.apache.log4j.Logger;
 import by.bsuir.server.connection.ServerMain;

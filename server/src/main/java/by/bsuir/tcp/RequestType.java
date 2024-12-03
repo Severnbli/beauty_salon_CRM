@@ -1,4 +1,4 @@
-package by.bsuir.enums;
+package by.bsuir.tcp;
 
 public enum RequestType {
     LOGIN,

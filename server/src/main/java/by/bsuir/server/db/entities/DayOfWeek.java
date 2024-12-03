@@ -1,4 +1,4 @@
-package by.bsuir.enums;
+package by.bsuir.server.db.entities;
 
 import lombok.Getter;
 

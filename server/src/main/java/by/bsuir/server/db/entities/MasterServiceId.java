@@ -1,4 +1,4 @@
-package by.bsuir.server.db.entities.compoundIdentifiers;
+package by.bsuir.server.db.entities;
 
 import java.io.Serializable;
 import lombok.Data;

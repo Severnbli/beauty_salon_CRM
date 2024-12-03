@@ -3,12 +3,12 @@ package by.bsuir.server.db.utils;
 import com.google.gson.Gson;
 import by.bsuir.server.db.entities.User;
 import by.bsuir.server.db.services.UserService;
-import by.bsuir.enums.ResponseStatus;
+import by.bsuir.tcp.ResponseStatus;
 import by.bsuir.tcp.Request;
 import by.bsuir.tcp.Response;
 import by.bsuir.server.utils.Nullifable;
 
-public class UserUtilities implements Nullifable {
+public class UserUtils implements Nullifable {
     private UserService userService = new UserService();
     private Gson gson = new Gson();
 
