@@ -23,7 +23,7 @@ public class PersonData {
     @Column(name = "last_name", length = 40)
     private String lastName;
 
-    @Column(nullable = false, length = 80)
+    @Column(length = 80)
     private String email;
 
     @Override
