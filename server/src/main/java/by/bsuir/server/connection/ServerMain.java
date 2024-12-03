@@ -1,5 +1,6 @@
 package by.bsuir.server.connection;
 
+import by.bsuir.server.services.DBConnection;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.apache.log4j.Logger;
 
@@ -21,6 +22,8 @@ public class ServerMain {
         log.info("Starting by.bsuir.server...");
 
         createServerSocket();
+
+        loadDatabase();
 
         while (true) {
             log.info("Waiting for a client connection...");
@@ -49,5 +52,10 @@ public class ServerMain {
         serverSocket = new ServerSocket(Integer.parseInt(dotenv.get("SERVER_PORT")));
 
         log.info("Server socket " + dotenv.get("SERVER_PORT") + " created successfully!");
+    }
+
+    public static void loadDatabase() {
+        log.info("Loading database...");
+        DBConnection.getSessionFactory();
     }
 }
