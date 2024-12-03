@@ -17,8 +17,11 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 20)
+    @Column(nullable = false, unique = true, length = 40)
     private String name;
+
+    @Column(name = "access_level", nullable = false)
+    private Integer accessLevel;
 
     @Override
     public final boolean equals(Object o) {

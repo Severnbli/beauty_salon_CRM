@@ -24,6 +24,9 @@ public class Master {
     @Column(length = 400)
     private String note;
 
+    @Column(length = 40)
+    private String grade;
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;

@@ -23,18 +23,13 @@ public class User {
     @Column(nullable = false, length = 32)
     private String password;
 
-    @Column(name = "first_name", nullable = false, length = 40)
-    private String firstName;
-
-    @Column(name = "last_name", length = 40)
-    private String lastName;
-
-    @Column(length = 80)
-    private String email;
-
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
+
+    @OneToOne
+    @JoinColumn(name = "person_data_id")
+    private PersonData personData;
 
     @Override
     public final boolean equals(Object o) {
