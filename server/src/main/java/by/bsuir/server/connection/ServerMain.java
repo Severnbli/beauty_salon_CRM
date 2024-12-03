@@ -2,6 +2,7 @@ package by.bsuir.server.connection;
 
 import by.bsuir.server.services.DBConnection;
 import io.github.cdimascio.dotenv.Dotenv;
+import lombok.Getter;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ public class ServerMain {
     private static final Logger log = Logger.getLogger(ServerMain.class);
 
     private static ServerSocket serverSocket;
+    @Getter
     private static final List<Socket> clients = new ArrayList<>();
 
     public static void startServer() throws IOException {
