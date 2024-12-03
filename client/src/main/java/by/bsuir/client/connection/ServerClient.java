@@ -4,6 +4,7 @@ import by.bsuir.tcp.Request;
 import by.bsuir.tcp.Response;
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,6 +13,7 @@ import java.net.Socket;
 import java.util.logging.Logger;
 
 @Getter
+@ToString
 public class ServerClient {
     private static final Logger log = Logger.getLogger(ServerClient.class.getName());
 
