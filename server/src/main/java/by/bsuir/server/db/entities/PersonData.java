@@ -4,33 +4,27 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.sql.Time;
 import java.util.Objects;
 
 @Entity
-@Table(name = "masters_schedules")
+@Table(name = "person_data")
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class Schedule {
+public class PersonData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "master_id", nullable = false)
-    private Master master;
+    @Column(name = "first_name", nullable = false, length = 40)
+    private String firstName;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "day_of_week", nullable = false)
-    private DayOfWeek dayOfWeek;
+    @Column(name = "last_name", length = 40)
+    private String lastName;
 
-    @Column(name = "start_time", nullable = false)
-    private Time startTime;
-
-    @Column(name = "end_time", nullable = false)
-    private Time endTime;
+    @Column(nullable = false, length = 80)
+    private String email;
 
     @Override
     public final boolean equals(Object o) {
@@ -39,8 +33,8 @@ public class Schedule {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Schedule schedule = (Schedule) o;
-        return getId() != null && Objects.equals(getId(), schedule.getId());
+        PersonData that = (PersonData) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override

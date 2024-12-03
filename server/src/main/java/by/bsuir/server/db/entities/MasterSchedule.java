@@ -4,32 +4,33 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.sql.Time;
 import java.util.Objects;
 
+@Entity
+@Table(name = "masters_schedules")
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-@Entity
-@Table(name = "users")
-public class User {
+public class MasterSchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 20)
-    private String login;
-
-    @Column(nullable = false, length = 32)
-    private String password;
-
     @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+    @JoinColumn(name = "master_id", nullable = false)
+    private Master master;
 
-    @OneToOne
-    @JoinColumn(name = "person_data_id")
-    private PersonData personData;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "day_of_week", nullable = false)
+    private DayOfWeek dayOfWeek;
+
+    @Column(name = "start_time", nullable = false)
+    private Time startTime;
+
+    @Column(name = "end_time", nullable = false)
+    private Time endTime;
 
     @Override
     public final boolean equals(Object o) {
@@ -38,8 +39,8 @@ public class User {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        User user = (User) o;
-        return getId() != null && Objects.equals(getId(), user.getId());
+        MasterSchedule masterSchedule = (MasterSchedule) o;
+        return getId() != null && Objects.equals(getId(), masterSchedule.getId());
     }
 
     @Override

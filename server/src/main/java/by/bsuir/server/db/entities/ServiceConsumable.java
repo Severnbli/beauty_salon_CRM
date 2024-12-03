@@ -12,14 +12,15 @@ import java.util.Objects;
 @Setter
 @ToString
 @RequiredArgsConstructor
-@IdClass(ServiceConsumableId.class)
 public class ServiceConsumable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @ManyToOne
     @JoinColumn(name = "service_id", nullable = false)
     private Service service;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "consumable_id", nullable = false)
     private Consumable consumable;
