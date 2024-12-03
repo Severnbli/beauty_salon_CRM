@@ -1,5 +1,6 @@
 package by.bsuir.client.connection;
 
+import by.bsuir.client.exceptions.ConnectionException;
 import by.bsuir.tcp.Request;
 import by.bsuir.tcp.Response;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -30,11 +31,10 @@ public class ServerClient {
                 + ") & PORT("+ dotenv.get("SERVER_PORT")+ ")...");
 
         try {
-            socket = new Socket(dotenv.get("SERVER_IP"), Integer.parseInt(dotenv.get("SERVER_PORT")));
-            out = new ObjectOutputStream(socket.getOutputStream());
-            in = new ObjectInputStream(socket.getInputStream());
-        } catch (IOException e) {
-            log.severe("Attempt of connection to server failed. Reason: " + e);
+            establishConnection(this, dotenv.get("SERVER_IP"), Integer.parseInt(dotenv.get("SERVER_PORT")));
+            log.info("Successfully connected to server!");
+        } catch (ConnectionException e) {
+            log.severe("Failed to establish connection to server. Reason: " + e);
         }
     }
 
@@ -45,5 +45,15 @@ public class ServerClient {
 
     public Response getResponse() throws IOException, ClassNotFoundException {
         return (Response) in.readObject();
+    }
+
+    private void establishConnection(ServerClient serverClient, String ip, int port) throws ConnectionException {
+        try {
+            serverClient.socket = new Socket(ip, port);
+            serverClient.out = new ObjectOutputStream(socket.getOutputStream());
+            serverClient.in = new ObjectInputStream(socket.getInputStream());
+        } catch (IOException e) {
+            throw new ConnectionException(e.getMessage());
+        }
     }
 }
