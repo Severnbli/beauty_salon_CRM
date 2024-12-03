@@ -29,8 +29,8 @@ public class ServerClient {
 
         try {
             socket = new Socket(dotenv.get("SERVER_IP"), Integer.parseInt(dotenv.get("SERVER_PORT")));
-            in = new ObjectInputStream(socket.getInputStream());
             out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
             log.severe("Attempt of connection to server failed. Reason: " + e);
         }
