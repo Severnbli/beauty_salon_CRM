@@ -16,5 +16,6 @@ module client {
     requires java.sql;
 
     opens by.bsuir.client.controllers to javafx.fxml;
+    opens by.bsuir.client.models to com.google.gson;
     exports by.bsuir.client;
 }
