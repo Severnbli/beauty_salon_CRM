@@ -40,6 +40,8 @@ public class ClientHandler implements Runnable, Nullifable {
                 operate();
             }
         } catch (Exception e) {
+            ServerMain.getClients().remove(socket);
+
             log.error("Error while operating client: " + e);
 
             response = new Response(ResponseStatus.ERROR, "Сервер закрыл соединение!", "");
