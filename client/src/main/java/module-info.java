@@ -13,6 +13,7 @@ module client {
     requires io.github.cdimascio.dotenv.java;
     requires com.google.gson;
     requires java.logging;
+    requires java.sql;
 
     opens by.bsuir.client.controllers to javafx.fxml;
     exports by.bsuir.client;
