@@ -34,14 +34,7 @@ public class ServerMain {
                     " connected!"
             );
 
-            ClientHandler client;
-
-            try {
-                client = new ClientHandler(clientSocket);
-                new Thread(client).start();
-            } catch (IOException e) {
-                log.error("An error while creating a new client handler: " + e);
-            }
+            new Thread(new ClientHandler(clientSocket)).start();
         }
     }
 
