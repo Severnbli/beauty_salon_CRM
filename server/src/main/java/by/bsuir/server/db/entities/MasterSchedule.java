@@ -13,7 +13,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class Schedule {
+public class MasterSchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -39,8 +39,8 @@ public class Schedule {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Schedule schedule = (Schedule) o;
-        return getId() != null && Objects.equals(getId(), schedule.getId());
+        MasterSchedule masterSchedule = (MasterSchedule) o;
+        return getId() != null && Objects.equals(getId(), masterSchedule.getId());
     }
 
     @Override

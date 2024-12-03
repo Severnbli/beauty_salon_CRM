@@ -18,7 +18,7 @@ public class DBConnection {
                         .addAnnotatedClass(MasterService.class)
                         .addAnnotatedClass(Order.class)
                         .addAnnotatedClass(Role.class)
-                        .addAnnotatedClass(Schedule.class)
+                        .addAnnotatedClass(MasterSchedule.class)
                         .addAnnotatedClass(Service.class)
                         .addAnnotatedClass(ServiceConsumable.class)
                         .addAnnotatedClass(User.class)
