@@ -1,13 +1,16 @@
 package by.bsuir.client.models;
 
-
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
+import java.sql.Time;
+
 @Data
 @Builder
-public class Role {
+public class Service {
     Long id;
     String name;
-    Integer accessLevel;
+    BigDecimal price;
+    Time timeCost;
 }
