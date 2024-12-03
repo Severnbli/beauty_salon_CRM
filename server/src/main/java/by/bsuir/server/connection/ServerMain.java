@@ -7,11 +7,14 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ServerMain {
     private static final Logger log = Logger.getLogger(ServerMain.class);
 
     private static ServerSocket serverSocket;
+    private static final List<Socket> clients = new ArrayList<>();
 
     public static void startServer() throws IOException {
         if (serverSocket != null) {
@@ -26,8 +29,12 @@ public class ServerMain {
         loadDatabase();
 
         while (true) {
+            clients.removeIf(Socket::isClosed);
+
             log.info("Waiting for a client connection...");
             Socket clientSocket = serverSocket.accept();
+
+            clients.add(clientSocket);
 
             log.info(
                     "Client IP: " + clientSocket.getInetAddress() + ", PORT: " + clientSocket.getLocalPort() +
