@@ -4,7 +4,7 @@ import by.bsuir.tcp.ResponseStatus;
 import by.bsuir.tcp.Request;
 import by.bsuir.tcp.Response;
 import org.apache.log4j.Logger;
-import by.bsuir.server.db.utils.UserUtils;
+import by.bsuir.server.services.UserService;
 import by.bsuir.server.utils.Nullifable;
 
 import java.io.IOException;
@@ -19,13 +19,13 @@ public class ClientHandler implements Runnable, Nullifable {
     private Response response;
     private ObjectInputStream in;
     private ObjectOutputStream out;
-    UserUtils userUtils;
+    UserService userService;
 
     public ClientHandler(Socket socket) throws IOException {
         this.socket = socket;
         in = new ObjectInputStream(socket.getInputStream());
         out = new ObjectOutputStream(socket.getOutputStream());
-        userUtils = new UserUtils();
+        userService = new UserService();
     }
 
     @Override
@@ -54,15 +54,15 @@ public class ClientHandler implements Runnable, Nullifable {
 
         switch (request.getType()) {
             case LOGIN: {
-                userUtils.login(request, response);
+                userService.login(request, response);
                 break;
             }
             case REGISTER: {
-                userUtils.register(request, response);
+                userService.register(request, response);
                 break;
             }
             case UPDATE_PROFILE: {
-                userUtils.update(request, response);
+                userService.update(request, response);
                 break;
             }
             default: {
@@ -95,8 +95,8 @@ public class ClientHandler implements Runnable, Nullifable {
             in = null;
             out = null;
 
-            userUtils.nullify();
-            userUtils = null;
+            userService.nullify();
+            userService = null;
 
             System.gc();
         }

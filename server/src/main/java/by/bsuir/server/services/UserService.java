@@ -1,21 +1,21 @@
-package by.bsuir.server.db.utils;
+package by.bsuir.server.services;
 
+import by.bsuir.server.db.dao.UserDAO;
 import com.google.gson.Gson;
 import by.bsuir.server.db.entities.User;
-import by.bsuir.server.db.services.UserService;
 import by.bsuir.tcp.ResponseStatus;
 import by.bsuir.tcp.Request;
 import by.bsuir.tcp.Response;
 import by.bsuir.server.utils.Nullifable;
 
-public class UserUtils implements Nullifable {
-    private UserService userService = new UserService();
+public class UserService implements Nullifable {
+    private UserDAO userDao = new UserDAO();
     private Gson gson = new Gson();
 
     public void login(Request req, Response res) {
         final User userFromRequest = gson.fromJson(req.getData(), User.class);
 
-        User user = userService.getAll().stream()
+        User user = userDao.getAll().stream()
                 .filter(x -> x.getLogin().equals(userFromRequest.getLogin()) && x.getPassword().equals(userFromRequest.getPassword()))
                 .findFirst()
                 .orElse(null);
@@ -37,7 +37,7 @@ public class UserUtils implements Nullifable {
 
     @Override
     public void nullify() {
-        userService = null;
+        userDao = null;
         gson = null;
 
         System.gc();
