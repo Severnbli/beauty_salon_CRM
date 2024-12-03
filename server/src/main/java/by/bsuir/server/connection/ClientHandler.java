@@ -21,16 +21,21 @@ public class ClientHandler implements Runnable, Nullifable {
     private ObjectOutputStream out;
     UserService userService;
 
-    public ClientHandler(Socket socket) throws IOException {
+    public ClientHandler(Socket socket) {
         this.socket = socket;
-        in = new ObjectInputStream(socket.getInputStream());
+    }
+
+    private void clientSetup() throws IOException {
         out = new ObjectOutputStream(socket.getOutputStream());
+        in = new ObjectInputStream(socket.getInputStream());
         userService = new UserService();
     }
 
     @Override
     public void run() {
         try {
+            clientSetup();
+
             while(socket.isConnected()) {
                 operate();
             }
