@@ -1,6 +1,7 @@
 package by.bsuir.client.controllers;
 
 import by.bsuir.client.connection.ServerClient;
+import by.bsuir.client.utils.AlertUtil;
 import by.bsuir.tcp.RequestType;
 import by.bsuir.tcp.ResponseStatus;
 import by.bsuir.client.models.User;
@@ -9,8 +10,12 @@ import by.bsuir.tcp.Response;
 import com.google.gson.Gson;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 public class LoginController {
@@ -37,12 +42,13 @@ public class LoginController {
     }
 
     @FXML
-    void onRegister(ActionEvent event) {
-
+    void onRegister(ActionEvent event) throws IOException {
+        Stage stage = (Stage) loginButton.getScene().getWindow();
+        stage.setScene(new Scene(new FXMLLoader(getClass().getResource("/views/register.fxml")).load()));
     }
 
     @FXML
-    void onLogin(ActionEvent event) {
+    void onLogin(ActionEvent event) throws IOException {
         if (loginField.getText().isEmpty() || passwordField.getText().isEmpty()) {
             AlertUtil.builder()
                     .alertType(Alert.AlertType.WARNING)
@@ -59,36 +65,21 @@ public class LoginController {
 
         Gson gson = new Gson();
 
-        Response response;
+        Response response = ServerClient.getInstance().makeRequestAndGetResponse(
+                Request.builder()
+                        .type(RequestType.LOGIN)
+                        .data(gson.toJson(user))
+                        .build(),
+                "Авторизация");
 
-        try {
-            ServerClient.getInstance().sendRequest(
-                    Request.builder()
-                            .type(RequestType.LOGIN)
-                            .data(gson.toJson(user))
-                            .build()
-            );
-            response = ServerClient.getInstance().getResponse();
-
-            if (response == null) {
-                throw new RuntimeException("не получен ответ от сервера");
-            }
-        } catch (Exception e) {
-            log.severe("Attempt of login failed: " + e);
-            AlertUtil.builder()
-                    .alertType(Alert.AlertType.ERROR)
-                    .header("Авторизация")
-                    .content("Ошибка: " + e + "!")
-                    .build().realise();
+        if (response == null) {
             return;
         }
 
         if (response.getStatus() == ResponseStatus.OK) {
-            AlertUtil.builder()
-                    .alertType(Alert.AlertType.INFORMATION)
-                    .header("Авторизация")
-                    .content("Успех!")
-                    .build().realise();
+            ServerClient.getInstance().setUser(gson.fromJson(response.getData(), User.class));
+            Stage stage = (Stage) loginButton.getScene().getWindow();
+            stage.setScene(new Scene(new FXMLLoader(getClass().getResource("/views/main.fxml")).load()));
         } else {
             AlertUtil.builder()
                     .alertType(Alert.AlertType.WARNING)

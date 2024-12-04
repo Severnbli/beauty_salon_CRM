@@ -1,4 +1,4 @@
-package by.bsuir.client.controllers;
+package by.bsuir.client.utils;
 
 import javafx.scene.control.Alert;
 import lombok.Builder;
