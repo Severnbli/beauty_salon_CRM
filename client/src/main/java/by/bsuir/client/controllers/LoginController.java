@@ -62,8 +62,17 @@ public class LoginController {
         Response response;
 
         try {
-            ServerClient.getInstance().sendRequest(new Request(RequestType.LOGIN, "", gson.toJson(user)));
+            ServerClient.getInstance().sendRequest(
+                    Request.builder()
+                            .type(RequestType.LOGIN)
+                            .data(gson.toJson(user))
+                            .build()
+            );
             response = ServerClient.getInstance().getResponse();
+
+            if (response == null) {
+                throw new RuntimeException("не получен ответ от сервера");
+            }
         } catch (Exception e) {
             log.severe("Attempt of login failed: " + e);
             AlertUtil.builder()
@@ -84,7 +93,7 @@ public class LoginController {
             AlertUtil.builder()
                     .alertType(Alert.AlertType.WARNING)
                     .header("Авторизация")
-                    .header("Пользователя с введёнными данными не существует!")
+                    .content("Пользователя с введёнными данными не существует!")
                     .build().realise();
         }
     }
