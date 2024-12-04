@@ -22,10 +22,7 @@ public class UserService implements Nullifable {
                     .build();
         }
 
-        User user = userDao.getAll().stream()
-                .filter(x -> x.getLogin().equals(userFromRequest.getLogin()) && x.getPassword().equals(userFromRequest.getPassword()))
-                .findFirst()
-                .orElse(null);
+        User user = userDao.getUserWithSuchLoginAndPassword(userFromRequest.getLogin(), userFromRequest.getPassword());
 
         if (user != null) {
             return Response.builder()
@@ -36,7 +33,7 @@ public class UserService implements Nullifable {
         } else {
             return Response.builder()
                     .status(ResponseStatus.ERROR)
-                    .message("Пользователь с указанными данными не найден")
+                    .message("Пользователь с указанными данными не найден!")
                     .build();
         }
     }
@@ -56,4 +53,4 @@ public class UserService implements Nullifable {
 
         System.gc();
     }
-}
+    }
