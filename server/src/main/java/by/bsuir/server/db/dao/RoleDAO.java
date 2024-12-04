@@ -55,4 +55,10 @@ public class RoleDAO implements DAO<Role> {
             return session.createQuery("select count(*) from Role", Long.class).getSingleResult();
         }
     }
+
+    public Role getByAccessLevel(int accessLevel) {
+        try (Session session = DBConnection.getSessionFactory().openSession()) {
+            return session.get(Role.class, accessLevel);
+        }
+    }
 }

@@ -57,24 +57,9 @@ public class UserDAO implements DAO<User> {
         }
     }
 
-    public User getUserWithSuchLoginAndPassword(final String login, final String password) {
+    public User getUserWithSuchLogin(String login) {
         try (Session session = DBConnection.getSessionFactory().openSession()) {
-            final String hql = "from User u where u.login = :login and u.password = :password";
-            Query<User> query = session.createQuery(hql, User.class);
-
-            query.setParameter("username", login);
-            query.setParameter("password", password);
-
-            return query.uniqueResult();
-        }
-    }
-
-    public boolean isUserWithSuchLoginExists(final String login) {
-        try (Session session = DBConnection.getSessionFactory().openSession()) {
-            final String hql = "from User u where u.login = :login";
-            Query<User> query = session.createQuery(hql, User.class);
-            query.setParameter("login", login);
-            return query.uniqueResult() != null;
+            return session.get(User.class, login);
         }
     }
 }
