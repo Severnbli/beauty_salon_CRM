@@ -15,6 +15,13 @@ public class UserService implements Nullifable {
     public Response login(Request req) {
         final User userFromRequest = gson.fromJson(req.getData(), User.class);
 
+        if (userFromRequest == null) {
+            return  Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Ошибка: данные о пользователе не разобраны!")
+                    .build();
+        }
+
         User user = userDao.getAll().stream()
                 .filter(x -> x.getLogin().equals(userFromRequest.getLogin()) && x.getPassword().equals(userFromRequest.getPassword()))
                 .findFirst()
