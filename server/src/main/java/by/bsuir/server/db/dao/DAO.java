@@ -8,4 +8,5 @@ public interface DAO<T> {
     void delete(T entity);
     void update(T entity);
     List<T> getAll();
+    Long count();
 }
