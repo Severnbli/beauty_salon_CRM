@@ -1,9 +1,6 @@
 package by.bsuir.server.db.dao;
 
 import by.bsuir.server.db.entities.User;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import by.bsuir.server.services.DBConnection;
@@ -48,12 +45,14 @@ public class UserDAO implements DAO<User> {
     @Override
     public List<User> getAll() {
         try (Session session = DBConnection.getSessionFactory().openSession()) {
-            CriteriaBuilder builder = session.getCriteriaBuilder();
-            CriteriaQuery<User> criteria = builder.createQuery(User.class);
-            Root<User> root = criteria.from(User.class);
-            criteria.select(root);
+            return session.createQuery("from User", User.class).getResultList();
+        }
+    }
 
-            return session.createQuery(criteria).getResultList();
+    @Override
+    public Long count() {
+        try (Session session = DBConnection.getSessionFactory().openSession()) {
+            return session.createQuery("select count(*) from User", Long.class).getSingleResult();
         }
     }
 }

@@ -2,9 +2,6 @@ package by.bsuir.server.db.dao;
 
 import by.bsuir.server.db.entities.Order;
 import by.bsuir.server.services.DBConnection;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -48,12 +45,14 @@ public class OrderDAO implements DAO<Order> {
     @Override
     public List<Order> getAll() {
         try (Session session = DBConnection.getSessionFactory().openSession()) {
-            CriteriaBuilder builder = session.getCriteriaBuilder();
-            CriteriaQuery<Order> criteria = builder.createQuery(Order.class);
-            Root<Order> root = criteria.from(Order.class);
-            criteria.select(root);
+            return session.createQuery("from Order", Order.class).getResultList();
+        }
+    }
 
-            return session.createQuery(criteria).getResultList();
+    @Override
+    public Long count() {
+        try (Session session = DBConnection.getSessionFactory().openSession()) {
+            return session.createQuery("select count(*) from Order", Long.class).getSingleResult();
         }
     }
 }

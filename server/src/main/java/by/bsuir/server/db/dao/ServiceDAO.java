@@ -2,9 +2,6 @@ package by.bsuir.server.db.dao;
 
 import by.bsuir.server.db.entities.Service;
 import by.bsuir.server.services.DBConnection;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -48,12 +45,14 @@ public class ServiceDAO implements DAO<Service> {
     @Override
     public List<Service> getAll() {
         try (Session session = DBConnection.getSessionFactory().openSession()) {
-            CriteriaBuilder builder = session.getCriteriaBuilder();
-            CriteriaQuery<Service> criteria = builder.createQuery(Service.class);
-            Root<Service> root = criteria.from(Service.class);
-            criteria.select(root);
+            return session.createQuery("from Service", Service.class).getResultList();
+        }
+    }
 
-            return session.createQuery(criteria).getResultList();
+    @Override
+    public Long count() {
+        try (Session session = DBConnection.getSessionFactory().openSession()) {
+            return session.createQuery("select count(*) from Service", Long.class).getSingleResult();
         }
     }
 }
