@@ -4,7 +4,6 @@ import by.bsuir.server.db.entities.User;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import by.bsuir.server.services.DBConnection;
-import org.hibernate.query.Query;
 
 import java.util.List;
 

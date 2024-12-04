@@ -3,6 +3,7 @@ package by.bsuir.server.services;
 import by.bsuir.server.db.dao.PersonDataDAO;
 import by.bsuir.server.db.dao.RoleDAO;
 import by.bsuir.server.db.dao.UserDAO;
+import by.bsuir.server.db.entities.PersonData;
 import by.bsuir.server.db.entities.Role;
 import com.google.gson.Gson;
 import by.bsuir.server.db.entities.User;
@@ -12,9 +13,10 @@ import by.bsuir.tcp.Response;
 import by.bsuir.server.utils.Nullifable;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.util.List;
+
 public class UserService implements Nullifable {
     private PersonDataDAO personDataDao = new PersonDataDAO();
-    private RoleDAO roleDao = new RoleDAO();
     private UserDAO userDao = new UserDAO();
     private Gson gson = new Gson();
 
@@ -54,14 +56,6 @@ public class UserService implements Nullifable {
                     .build();
         }
 
-        Role role = roleDao.getByAccessLevel(userFromRequest.getRole().getAccessLevel());
-        if (role == null) {
-            return Response.builder()
-                    .status(ResponseStatus.ERROR)
-                    .message("Неизвестная роль")
-                    .build();
-        }
-
         if (userDao.getUserWithSuchLogin(userFromRequest.getLogin()) != null) {
             return Response.builder()
                     .status(ResponseStatus.ERROR)
@@ -70,7 +64,6 @@ public class UserService implements Nullifable {
         }
 
         userFromRequest.setPassword(BCrypt.hashpw(userFromRequest.getPassword(), BCrypt.gensalt()));
-        userFromRequest.setRole(role);
 
         personDataDao.save(userFromRequest.getPersonData());
         userDao.save(userFromRequest);
@@ -88,14 +81,29 @@ public class UserService implements Nullifable {
         }
     }
 
-    public Response update(Request req) {
-        return null;
+    public Response update_profile(Request req) {
+        final User userFromRequest = gson.fromJson(req.getData(), User.class);
+
+        if (userFromRequest == null || userFromRequest.getPersonData() == null) {
+            return  Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Ошибка: данные о пользователе не разобраны!")
+                    .build();
+        }
+
+        userDao.update(userFromRequest);
+        personDataDao.update(userFromRequest.getPersonData());
+
+        return Response.builder()
+                .status(ResponseStatus.OK)
+                .message("Обновление данных успешно!")
+                .data(gson.toJson(userFromRequest))
+                .build();
     }
 
     @Override
     public void nullify() {
         personDataDao = null;
-        roleDao = null;
         userDao = null;
         gson = null;
 

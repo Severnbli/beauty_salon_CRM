@@ -78,7 +78,7 @@ public class ClientHandler implements Runnable, Nullifable {
                     break;
                 }
                 case UPDATE_PROFILE: {
-                    response = userService.update(request);
+                    response = userService.update_profile(request);
                     break;
                 }
                 default: {
