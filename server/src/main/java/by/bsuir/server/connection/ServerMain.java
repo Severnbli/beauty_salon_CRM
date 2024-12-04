@@ -59,5 +59,6 @@ public class ServerMain {
     public static void loadDatabase() {
         log.info("Loading database...");
         DBConnection.getSessionFactory();
+        DBConnection.makeFirstAdmin();
     }
 }
