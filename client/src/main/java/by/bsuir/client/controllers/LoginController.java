@@ -84,7 +84,7 @@ public class LoginController {
             AlertUtil.builder()
                     .alertType(Alert.AlertType.WARNING)
                     .header("Авторизация")
-                    .header("Пользователя с введёнными данными не существует!")
+                    .content("Пользователя с введёнными данными не существует!")
                     .build().realise();
         }
     }
