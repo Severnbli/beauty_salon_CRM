@@ -12,7 +12,7 @@ public class UserService implements Nullifable {
     private UserDAO userDao = new UserDAO();
     private Gson gson = new Gson();
 
-    public void login(Request req, Response res) {
+    public Response login(Request req) {
         final User userFromRequest = gson.fromJson(req.getData(), User.class);
 
         User user = userDao.getAll().stream()
@@ -21,21 +21,25 @@ public class UserService implements Nullifable {
                 .orElse(null);
 
         if (user != null) {
-            res.setStatus(ResponseStatus.OK);
-            res.setMessage("Успешный вход");
-            res.setData(gson.toJson(user));
+            return Response.builder()
+                    .status(ResponseStatus.OK)
+                    .message("Успешный вход!")
+                    .data(gson.toJson(user))
+                    .build();
         } else {
-            res.setStatus(ResponseStatus.ERROR);
-            res.setMessage("Пользователь с указанными данными не найден");
+            return Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Пользователь с указанными данными не найден")
+                    .build();
         }
     }
 
-    public void register(Request req, Response res) {
-
+    public Response register(Request req) {
+        return null;
     }
 
-    public void update(Request req, Response res) {
-
+    public Response update(Request req) {
+        return null;
     }
 
     @Override

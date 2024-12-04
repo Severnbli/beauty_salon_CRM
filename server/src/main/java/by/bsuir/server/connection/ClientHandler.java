@@ -44,7 +44,10 @@ public class ClientHandler implements Runnable, Nullifable {
 
             log.error("Error while operating client: " + e);
 
-            response = new Response(ResponseStatus.ERROR, "Сервер закрыл соединение!", "");
+            response = Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Сервер закрыл соединение!")
+                    .build();
 
             try {
                 sendResponse();
@@ -61,19 +64,22 @@ public class ClientHandler implements Runnable, Nullifable {
 
         switch (request.getType()) {
             case LOGIN: {
-                userService.login(request, response);
+                response = userService.login(request);
                 break;
             }
             case REGISTER: {
-                userService.register(request, response);
+                response = userService.register(request);
                 break;
             }
             case UPDATE_PROFILE: {
-                userService.update(request, response);
+                response = userService.update(request);
                 break;
             }
             default: {
-                response = new Response(ResponseStatus.ERROR, "Неизвестный запрос!", "");
+                response = Response.builder()
+                        .status(ResponseStatus.ERROR)
+                        .message("Неизвестный запрос!")
+                        .build();
                 break;
             }
         }
