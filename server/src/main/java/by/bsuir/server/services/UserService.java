@@ -81,7 +81,7 @@ public class UserService implements Nullifable {
         }
     }
 
-    public Response update_profile(Request req) {
+    public Response updateProfile(Request req) {
         final User userFromRequest = gson.fromJson(req.getData(), User.class);
 
         if (userFromRequest == null || userFromRequest.getPersonData() == null) {
