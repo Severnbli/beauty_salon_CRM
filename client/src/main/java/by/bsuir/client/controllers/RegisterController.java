@@ -104,7 +104,7 @@ public class RegisterController {
             AlertUtil.builder()
                     .alertType(Alert.AlertType.ERROR)
                     .header("Регистрация")
-                    .content("Не найдена нужная роль на сервере!")
+                    .content(response.getMessage())
                     .build().realise();
             return;
         }
@@ -141,7 +141,7 @@ public class RegisterController {
             AlertUtil.builder()
                     .alertType(Alert.AlertType.ERROR)
                     .header("Регистрация")
-                    .content("Регистрация не удалась. Попробуйте снова.")
+                    .content(response.getMessage())
                     .build().realise();
         } else {
             AlertUtil.builder()
