@@ -1,4 +1,4 @@
-module client {
+module by.bsuir.client {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
@@ -18,4 +18,5 @@ module client {
     opens by.bsuir.client.controllers to javafx.fxml;
     opens by.bsuir.client.models to com.google.gson;
     exports by.bsuir.client;
+    opens by.bsuir.client.utils to javafx.fxml;
 }
