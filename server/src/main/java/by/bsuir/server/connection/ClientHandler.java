@@ -62,25 +62,32 @@ public class ClientHandler implements Runnable, Nullifable {
     private void operate() throws IOException, ClassNotFoundException {
         request = (Request) in.readObject();
 
-        switch (request.getType()) {
-            case LOGIN: {
-                response = userService.login(request);
-                break;
-            }
-            case REGISTER: {
-                response = userService.register(request);
-                break;
-            }
-            case UPDATE_PROFILE: {
-                response = userService.update(request);
-                break;
-            }
-            default: {
-                response = Response.builder()
-                        .status(ResponseStatus.ERROR)
-                        .message("Неизвестный запрос!")
-                        .build();
-                break;
+        if (request == null) {
+            response = Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Ошибка получения запроса!")
+                    .build();
+        } else {
+            switch (request.getType()) {
+                case LOGIN: {
+                    response = userService.login(request);
+                    break;
+                }
+                case REGISTER: {
+                    response = userService.register(request);
+                    break;
+                }
+                case UPDATE_PROFILE: {
+                    response = userService.update(request);
+                    break;
+                }
+                default: {
+                    response = Response.builder()
+                            .status(ResponseStatus.ERROR)
+                            .message("Неизвестный запрос!")
+                            .build();
+                    break;
+                }
             }
         }
 
