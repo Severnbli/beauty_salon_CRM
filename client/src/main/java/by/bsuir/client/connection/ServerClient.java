@@ -1,6 +1,7 @@
 package by.bsuir.client.connection;
 
 import by.bsuir.client.exceptions.ConnectionException;
+import by.bsuir.client.models.User;
 import by.bsuir.tcp.Request;
 import by.bsuir.tcp.Response;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -23,6 +24,7 @@ public class ServerClient {
     private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
+    private User user;
 
     ServerClient() {
         final Dotenv dotenv = Dotenv.load();
