@@ -4,6 +4,7 @@ import by.bsuir.server.db.entities.User;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import by.bsuir.server.services.DBConnection;
+import org.hibernate.query.Query;
 
 import java.util.List;
 
@@ -53,6 +54,27 @@ public class UserDAO implements DAO<User> {
     public Long count() {
         try (Session session = DBConnection.getSessionFactory().openSession()) {
             return session.createQuery("select count(*) from User", Long.class).getSingleResult();
+        }
+    }
+
+    public User getUserWithSuchLoginAndPassword(final String login, final String password) {
+        try (Session session = DBConnection.getSessionFactory().openSession()) {
+            final String hql = "from User u where u.login = :login and u.password = :password";
+            Query<User> query = session.createQuery(hql, User.class);
+
+            query.setParameter("username", login);
+            query.setParameter("password", password);
+
+            return query.uniqueResult();
+        }
+    }
+
+    public boolean isUserWithSuchLoginExists(final String login) {
+        try (Session session = DBConnection.getSessionFactory().openSession()) {
+            final String hql = "from User u where u.login = :login";
+            Query<User> query = session.createQuery(hql, User.class);
+            query.setParameter("login", login);
+            return query.uniqueResult() != null;
         }
     }
 }
