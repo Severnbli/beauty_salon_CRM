@@ -1,5 +1,6 @@
 package by.bsuir.server.connection;
 
+import by.bsuir.server.services.RoleService;
 import by.bsuir.tcp.ResponseStatus;
 import by.bsuir.tcp.Request;
 import by.bsuir.tcp.Response;
@@ -20,6 +21,7 @@ public class ClientHandler implements Runnable, Nullifable {
     private ObjectInputStream in;
     private ObjectOutputStream out;
     UserService userService;
+    RoleService roleService;
 
     public ClientHandler(Socket socket) {
         this.socket = socket;
@@ -29,6 +31,7 @@ public class ClientHandler implements Runnable, Nullifable {
         out = new ObjectOutputStream(socket.getOutputStream());
         in = new ObjectInputStream(socket.getInputStream());
         userService = new UserService();
+        roleService = new RoleService();
     }
 
     @Override
@@ -78,7 +81,11 @@ public class ClientHandler implements Runnable, Nullifable {
                     break;
                 }
                 case UPDATE_PROFILE: {
-                    response = userService.update_profile(request);
+                    response = userService.updateProfile(request);
+                    break;
+                }
+                case ROLE_BY_ACCESS_LEVEL: {
+                    response = roleService.roleByAccessLevel(request);
                     break;
                 }
                 default: {
@@ -116,7 +123,10 @@ public class ClientHandler implements Runnable, Nullifable {
             out = null;
 
             userService.nullify();
+            roleService.nullify();
+
             userService = null;
+            roleService = null;
 
             System.gc();
         }
