@@ -21,9 +21,12 @@ public class UserService implements Nullifable {
                 .orElse(null);
 
         if (user != null) {
-            res = new Response(ResponseStatus.OK, "Успешный вход", gson.toJson(user));
+            res.setStatus(ResponseStatus.OK);
+            res.setMessage("Успешный вход");
+            res.setData(gson.toJson(user));
         } else {
-            res = new Response(ResponseStatus.ERROR, "Пользователь с указанными данными не найден", "");
+            res.setStatus(ResponseStatus.ERROR);
+            res.setMessage("Пользователь с указанными данными не найден");
         }
     }
 
