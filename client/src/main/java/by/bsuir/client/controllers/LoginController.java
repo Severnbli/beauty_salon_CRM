@@ -65,27 +65,14 @@ public class LoginController {
 
         Gson gson = new Gson();
 
-        Response response;
+        Response response = ServerClient.getInstance().makeRequestAndGetResponse(
+                Request.builder()
+                        .type(RequestType.LOGIN)
+                        .data(gson.toJson(user))
+                        .build(),
+                "Авторизация");
 
-        try {
-            ServerClient.getInstance().sendRequest(
-                    Request.builder()
-                            .type(RequestType.LOGIN)
-                            .data(gson.toJson(user))
-                            .build()
-            );
-            response = ServerClient.getInstance().getResponse();
-
-            if (response == null) {
-                throw new RuntimeException("не получен ответ от сервера");
-            }
-        } catch (Exception e) {
-            log.severe("Attempt of login failed: " + e);
-            AlertUtil.builder()
-                    .alertType(Alert.AlertType.ERROR)
-                    .header("Авторизация")
-                    .content("Ошибка: " + e + "!")
-                    .build().realise();
+        if (response == null) {
             return;
         }
 

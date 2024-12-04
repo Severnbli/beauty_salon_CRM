@@ -1,20 +1,31 @@
 package by.bsuir.client.controllers;
 
+import by.bsuir.client.connection.ServerClient;
 import by.bsuir.client.models.PersonData;
+import by.bsuir.client.models.Role;
+import by.bsuir.client.models.User;
 import by.bsuir.client.utils.AlertUtil;
 import by.bsuir.client.utils.EmailValidator;
+import by.bsuir.tcp.Request;
+import by.bsuir.tcp.RequestType;
+import by.bsuir.tcp.Response;
+import by.bsuir.tcp.ResponseStatus;
+import com.google.gson.Gson;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 public class RegisterController {
+    private static final Logger log = Logger.getLogger(RegisterController.class.getName());
 
     @FXML
     private Button backToLoginButton;
@@ -47,12 +58,13 @@ public class RegisterController {
     }
 
     @FXML
-    void onRegister(ActionEvent event) {
+    void onRegister(ActionEvent event) throws IOException {
         if (loginField.getText().isEmpty()
                 || passwordField.getText().isEmpty()
                 || firstNameField.getText().isEmpty()
                 || confirmPasswordField.getText().isEmpty()) {
             AlertUtil.builder()
+                    .alertType(Alert.AlertType.WARNING)
                     .header("Регистрация")
                     .content("Заполните все поля со звёздочками!")
                     .build().realise();
@@ -61,6 +73,7 @@ public class RegisterController {
 
         if (!passwordField.getText().equals(confirmPasswordField.getText())) {
             AlertUtil.builder()
+                    .alertType(Alert.AlertType.WARNING)
                     .header("Регистрация")
                     .content("Пароли не совпадают!")
                     .build().realise();
@@ -69,11 +82,36 @@ public class RegisterController {
 
         if (!emailField.getText().isEmpty() && !EmailValidator.isValid(emailField.getText())) {
             AlertUtil.builder()
+                    .alertType(Alert.AlertType.WARNING)
                     .header("Регистрация")
                     .content("Проверьте правильность email-адреса!")
                     .build().realise();
             return;
         }
+
+        Response response = ServerClient.getInstance().makeRequestAndGetResponse(
+                Request.builder()
+                        .type(RequestType.ROLE_BY_ACCESS_LEVEL)
+                        .data("0")
+                        .build(),
+                "Регистрация");
+
+        if (response == null) {
+            return;
+        }
+
+        if (response.getStatus() == ResponseStatus.ERROR) {
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.ERROR)
+                    .header("Регистрация")
+                    .content("Не найдена нужная роль на сервере!")
+                    .build().realise();
+            return;
+        }
+
+        final Gson gson = new Gson();
+
+        Role role = gson.fromJson(response.getData(), Role.class);
 
         PersonData personData = PersonData.builder()
                 .firstName(firstNameField.getText())
@@ -81,7 +119,40 @@ public class RegisterController {
                 .email(emailField.getText())
                 .build();
 
-        
+        User user = User.builder()
+                .login(loginField.getText())
+                .password(passwordField.getText())
+                .role(role)
+                .personData(personData)
+                .build();
+
+        response = ServerClient.getInstance().makeRequestAndGetResponse(
+                Request.builder()
+                        .type(RequestType.REGISTER)
+                        .data(gson.toJson(user))
+                        .build(),
+                "Регистрация");
+
+        if (response == null) {
+            return;
+        }
+
+        if (response.getStatus() == ResponseStatus.ERROR) {
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.ERROR)
+                    .header("Регистрация")
+                    .content("Регистрация не удалась. Попробуйте снова.")
+                    .build().realise();
+        } else {
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.INFORMATION)
+                    .header("Регистрация")
+                    .content("Регистрация прошла успешно!")
+                    .build().realise();
+
+            Stage stage = (Stage) registerButton.getScene().getWindow();
+            stage.setScene(new Scene(new FXMLLoader(getClass().getResource("/views/login.fxml")).load()));
+        }
     }
 
 }
