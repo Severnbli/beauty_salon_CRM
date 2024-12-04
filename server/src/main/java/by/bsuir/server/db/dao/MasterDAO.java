@@ -2,9 +2,6 @@ package by.bsuir.server.db.dao;
 
 import by.bsuir.server.db.entities.Master;
 import by.bsuir.server.services.DBConnection;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -48,12 +45,14 @@ public class MasterDAO implements DAO<Master> {
     @Override
     public List<Master> getAll() {
         try (Session session = DBConnection.getSessionFactory().openSession()) {
-            CriteriaBuilder builder = session.getCriteriaBuilder();
-            CriteriaQuery<Master> criteria = builder.createQuery(Master.class);
-            Root<Master> root = criteria.from(Master.class);
-            criteria.select(root);
+            return session.createQuery("from Master", Master.class).getResultList();
+        }
+    }
 
-            return session.createQuery(criteria).getResultList();
+    @Override
+    public Long count() {
+        try (Session session = DBConnection.getSessionFactory().openSession()) {
+            return session.createQuery("select count(*) from Master", Long.class).getSingleResult();
         }
     }
 }

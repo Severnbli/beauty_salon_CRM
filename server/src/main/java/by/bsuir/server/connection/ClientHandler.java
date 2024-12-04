@@ -1,5 +1,6 @@
 package by.bsuir.server.connection;
 
+import by.bsuir.server.services.RoleService;
 import by.bsuir.tcp.ResponseStatus;
 import by.bsuir.tcp.Request;
 import by.bsuir.tcp.Response;
@@ -20,6 +21,7 @@ public class ClientHandler implements Runnable, Nullifable {
     private ObjectInputStream in;
     private ObjectOutputStream out;
     UserService userService;
+    RoleService roleService;
 
     public ClientHandler(Socket socket) {
         this.socket = socket;
@@ -29,6 +31,7 @@ public class ClientHandler implements Runnable, Nullifable {
         out = new ObjectOutputStream(socket.getOutputStream());
         in = new ObjectInputStream(socket.getInputStream());
         userService = new UserService();
+        roleService = new RoleService();
     }
 
     @Override
@@ -62,25 +65,36 @@ public class ClientHandler implements Runnable, Nullifable {
     private void operate() throws IOException, ClassNotFoundException {
         request = (Request) in.readObject();
 
-        switch (request.getType()) {
-            case LOGIN: {
-                response = userService.login(request);
-                break;
-            }
-            case REGISTER: {
-                response = userService.register(request);
-                break;
-            }
-            case UPDATE_PROFILE: {
-                response = userService.update(request);
-                break;
-            }
-            default: {
-                response = Response.builder()
-                        .status(ResponseStatus.ERROR)
-                        .message("Неизвестный запрос!")
-                        .build();
-                break;
+        if (request == null) {
+            response = Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Ошибка получения запроса!")
+                    .build();
+        } else {
+            switch (request.getType()) {
+                case LOGIN: {
+                    response = userService.login(request);
+                    break;
+                }
+                case REGISTER: {
+                    response = userService.register(request);
+                    break;
+                }
+                case UPDATE_PROFILE: {
+                    response = userService.updateProfile(request);
+                    break;
+                }
+                case ROLE_BY_ACCESS_LEVEL: {
+                    response = roleService.roleByAccessLevel(request);
+                    break;
+                }
+                default: {
+                    response = Response.builder()
+                            .status(ResponseStatus.ERROR)
+                            .message("Неизвестный запрос!")
+                            .build();
+                    break;
+                }
             }
         }
 
@@ -109,7 +123,10 @@ public class ClientHandler implements Runnable, Nullifable {
             out = null;
 
             userService.nullify();
+            roleService.nullify();
+
             userService = null;
+            roleService = null;
 
             System.gc();
         }
