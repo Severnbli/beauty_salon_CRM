@@ -6,6 +6,7 @@ import by.bsuir.tcp.Request;
 import by.bsuir.tcp.Response;
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.io.IOException;
@@ -24,6 +25,7 @@ public class ServerClient {
     private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
+    @Setter
     private User user;
 
     ServerClient() {
