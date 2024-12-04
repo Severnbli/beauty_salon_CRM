@@ -20,7 +20,7 @@ public class User {
     @Column(nullable = false, unique = true, length = 20)
     private String login;
 
-    @Column(nullable = false, length = 32)
+    @Column(nullable = false)
     private String password;
 
     @ManyToOne
