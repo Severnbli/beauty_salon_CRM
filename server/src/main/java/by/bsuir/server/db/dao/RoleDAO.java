@@ -58,7 +58,8 @@ public class RoleDAO implements DAO<Role> {
 
     public Role getByAccessLevel(int accessLevel) {
         try (Session session = DBConnection.getSessionFactory().openSession()) {
-            return session.get(Role.class, accessLevel);
+            final String hql = "from Role where accessLevel = :accessLevel";
+            return session.createQuery(hql, Role.class).setParameter("accessLevel", accessLevel).uniqueResult();
         }
     }
 }
