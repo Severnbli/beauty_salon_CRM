@@ -1,5 +1,6 @@
 package by.bsuir.client.controllers;
 
+import by.bsuir.client.App;
 import by.bsuir.client.connection.ServerClient;
 import by.bsuir.client.models.User;
 import by.bsuir.client.utils.AlertUtil;
@@ -179,6 +180,8 @@ public class MainController implements Setupable {
         Stage stage = new Stage();
         otherStages.add(stage);
 
+        stage.setTitle(App.getPrimaryStage().getTitle() + " - Бронирование услуг");
+
         stage.setOnCloseRequest(closeEvent -> {
             ServiceAppointmentController.setStage(null);
             otherStages.remove(stage);
@@ -205,6 +208,8 @@ public class MainController implements Setupable {
         Stage stage = new Stage();
         otherStages.add(stage);
 
+        stage.setTitle(App.getPrimaryStage().getTitle() + " - Настройка профиля");
+
         stage.setOnCloseRequest(closeEvent -> {
             AccountManageController.setStage(null);
             otherStages.remove(stage);
@@ -225,6 +230,8 @@ public class MainController implements Setupable {
 
         Stage stage = new Stage();
         otherStages.add(stage);
+
+        stage.setTitle(App.getPrimaryStage().getTitle() + " - Просмотр записей");
 
         stage.setOnCloseRequest(closeEvent -> {
             ViewOrdersController.setStage(null);
