@@ -113,6 +113,10 @@ public class ClientHandler implements Runnable, Nullifable {
                     response = masterServiceService.getMastersByServiceAndDate(request);
                     break;
                 }
+                case ADD_ORDER: {
+                    response = orderService.addOrder(request);
+                    break;
+                }
                 default: {
                     response = Response.builder()
                             .status(ResponseStatus.ERROR)

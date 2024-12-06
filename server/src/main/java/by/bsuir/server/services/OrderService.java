@@ -2,6 +2,7 @@ package by.bsuir.server.services;
 
 import by.bsuir.server.db.dao.OrderDAO;
 import by.bsuir.server.db.dao.UserDAO;
+import by.bsuir.server.db.entities.Master;
 import by.bsuir.server.db.entities.Order;
 import by.bsuir.server.db.entities.StatusOfRecord;
 import by.bsuir.server.db.entities.User;
@@ -10,12 +11,17 @@ import by.bsuir.tcp.Request;
 import by.bsuir.tcp.Response;
 import by.bsuir.tcp.ResponseStatus;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
 
 public class OrderService implements Nullifable {
     private OrderDAO orderDAO = new OrderDAO();
     private UserDAO userDAO = new UserDAO();
+    private MasterServiceService masterServiceService = new MasterServiceService();
     private Gson gson = new Gson();
 
     public Response rejectOrder(Request req) {
@@ -85,8 +91,50 @@ public class OrderService implements Nullifable {
                 .build();
     }
 
+    public Response addOrder(Request req) {
+        final Order orderFromRequest = gson.fromJson(req.getData(), Order.class);
+
+        if (orderFromRequest == null) {
+            return Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Ошибка: данные о бронировании не разобраны!")
+                    .build();
+        }
+
+        Response selfResponse = masterServiceService.getMastersByServiceAndDate(
+                Request.builder()
+                        .data(req.getData())
+                        .build()
+        );
+
+        if (selfResponse.getStatus() != ResponseStatus.OK) {
+            return selfResponse;
+        }
+
+        Type mapType = new TypeToken<HashMap<Master, List<LocalTime>>>() {}.getType();
+        HashMap<Master, List<LocalTime>> nowMastersWithAvailableTimes = gson.fromJson(selfResponse.getData(), mapType);
+
+        if (nowMastersWithAvailableTimes.containsKey(orderFromRequest.getMaster()) &&
+            nowMastersWithAvailableTimes.get(orderFromRequest.getMaster()).contains(orderFromRequest.getDate().toLocalTime())) {
+            orderDAO.save(orderFromRequest);
+
+            return Response.builder()
+                    .status(ResponseStatus.OK)
+                    .message("Бронирование завершено успешно!")
+                    .build();
+        } else {
+            return Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Обновите доступных мастеров. В расписании прошли изменения.")
+                    .build();
+        }
+    }
+
     @Override
     public void nullify() {
+        masterServiceService.nullify();
+
+        masterServiceService = null;
         orderDAO = null;
         userDAO = null;
         gson = null;
