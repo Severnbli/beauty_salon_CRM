@@ -1,13 +1,10 @@
 package by.bsuir.server.connection;
 
-import by.bsuir.server.services.OrderService;
-import by.bsuir.server.services.RoleService;
-import by.bsuir.server.services.ServiceService;
+import by.bsuir.server.services.*;
 import by.bsuir.tcp.ResponseStatus;
 import by.bsuir.tcp.Request;
 import by.bsuir.tcp.Response;
 import org.apache.log4j.Logger;
-import by.bsuir.server.services.UserService;
 import by.bsuir.server.utils.Nullifable;
 
 import java.io.IOException;
@@ -26,6 +23,7 @@ public class ClientHandler implements Runnable, Nullifable {
     private RoleService roleService;
     private OrderService orderService;
     private ServiceService serviceService;
+    private MasterServiceService masterServiceService;
 
     public ClientHandler(Socket socket) {
         this.socket = socket;
@@ -38,6 +36,7 @@ public class ClientHandler implements Runnable, Nullifable {
         roleService = new RoleService();
         orderService = new OrderService();
         serviceService = new ServiceService();
+        masterServiceService = new MasterServiceService();
     }
 
     @Override
@@ -110,6 +109,10 @@ public class ClientHandler implements Runnable, Nullifable {
                     response = serviceService.getAllServices();
                     break;
                 }
+                case GET_MASTERS_BY_SERVICE_AND_DATE: {
+                    response = masterServiceService.getMastersByServiceAndDate(request);
+                    break;
+                }
                 default: {
                     response = Response.builder()
                             .status(ResponseStatus.ERROR)
@@ -148,11 +151,13 @@ public class ClientHandler implements Runnable, Nullifable {
             roleService.nullify();
             orderService.nullify();
             serviceService.nullify();
+            masterServiceService.nullify();
 
             userService = null;
             roleService = null;
             orderService = null;
             serviceService = null;
+            masterServiceService = null;
 
             System.gc();
         }

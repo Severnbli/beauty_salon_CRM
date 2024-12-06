@@ -5,6 +5,7 @@ import by.bsuir.server.services.DBConnection;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class OrderDAO implements DAO<Order> {
@@ -60,6 +61,17 @@ public class OrderDAO implements DAO<Order> {
         try (Session session = DBConnection.getSessionFactory().openSession()) {
             final String hql = "from Order where client_id = :clientId";
             return session.createQuery(hql, Order.class).setParameter("clientId", clientId).getResultList();
+        }
+    }
+
+    public List<Order> getOrdersByMasterAndDate(Long masterId, LocalDate date) {
+        try (Session session = DBConnection.getSessionFactory().openSession()) {
+            final String hql = "from Order where master_id = :masterId and date between :date_1 and :date_2";
+            return session.createQuery(hql, Order.class)
+                    .setParameter("master_id", masterId)
+                    .setParameter("date_1", date.atStartOfDay())
+                    .setParameter("date_2", date.atTime(23, 59, 59))
+                    .getResultList();
         }
     }
 }
