@@ -16,7 +16,7 @@
 
     <ImageView fitHeight="100" fitWidth="100" pickOnBounds="true" preserveRatio="true">
         <image>
-            <Image url="@../pictures/logo.png" />
+            <Image url="@../../pictures/logo.png" />
         </image>
     </ImageView>
 
@@ -43,5 +43,5 @@
 
 
     <Button fx:id="regButton" maxWidth="200" onAction="#onRegister" style="-fx-background-color: #FFFFFF; -fx-border-color: #000000; -fx-text-fill: #000000; -fx-font-size: 14; -fx-padding: 10; -fx-border-radius: 5;" text="Регистрация" />
-   <Hyperlink fx:id="forgotPasswordLink" onAction="#onForgotPassword" text="Забыли пароль?" />
+   <Hyperlink fx:id="forgotPasswordLink" onAction="#onForgotPassword" text="Забыли пароль?" visible="false" />
 </VBox>
