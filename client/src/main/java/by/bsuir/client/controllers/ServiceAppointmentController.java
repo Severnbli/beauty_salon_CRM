@@ -9,6 +9,9 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
@@ -43,6 +46,10 @@ public class ServiceAppointmentController {
 
     @FXML
     private ComboBox<LocalTime> timeComoBox;
+
+    @Setter
+    @Getter
+    private static Stage stage;
 
     @FXML
     void onGetMasters(ActionEvent event) {

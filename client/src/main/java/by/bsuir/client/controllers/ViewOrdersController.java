@@ -9,6 +9,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.Stage;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -31,6 +34,10 @@ public class ViewOrdersController {
 
     @FXML
     private TableView<Order> ordersTable;
+
+    @Setter
+    @Getter
+    private static Stage stage;
 
     @FXML
     void delOrderButton(ActionEvent event) {

@@ -20,6 +20,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.IOException;
 
@@ -47,6 +49,10 @@ public class AccountManageController implements Setupable {
 
     @FXML
     private Button updateAccountButton;
+
+    @Setter
+    @Getter
+    private static Stage stage;
 
     @Override
     public void setup() {
