@@ -1,5 +1,8 @@
 package by.bsuir.client.controllers;
 
+import by.bsuir.client.connection.ServerClient;
+import by.bsuir.client.models.User;
+import by.bsuir.client.utils.Setupable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
@@ -10,7 +13,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainController {
+public class MainController implements Setupable {
     @FXML
     private Menu adminMenu;
 
@@ -60,6 +63,31 @@ public class MainController {
     private MenuItem usersItem;
 
     private List<Stage> otherStages = new ArrayList<>();
+
+    @Override
+    public void setup() {
+        User client = ServerClient.getInstance().getUser();
+
+        if (client != null && client.getRole() != null) {
+            switch (client.getRole().getAccessLevel()) {
+                case 111: { // Master
+                    masterMenu.setVisible(true);
+                    adminMenu.setVisible(false);
+                    break;
+                }
+                case 555, 999: { // Admin
+                    masterMenu.setVisible(false);
+                    adminMenu.setVisible(true);
+                    break;
+                }
+                default: {
+                    masterMenu.setVisible(false);
+                    adminMenu.setVisible(false);
+                    break;
+                }
+            }
+        }
+    }
 
     @FXML
     void onCloseOtherStages(ActionEvent event) {

@@ -79,7 +79,12 @@ public class LoginController {
         if (response.getStatus() == ResponseStatus.OK) {
             ServerClient.getInstance().setUser(gson.fromJson(response.getData(), User.class));
             Stage stage = (Stage) loginButton.getScene().getWindow();
-            stage.setScene(new Scene(new FXMLLoader(getClass().getResource("/views/general/main.fxml")).load()));
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/general/main.fxml"));
+            MainController mainController = loader.getController();
+            mainController.setup();
+
+            stage.setScene(new Scene(loader.load()));
         } else {
             AlertUtil.builder()
                     .alertType(Alert.AlertType.WARNING)
