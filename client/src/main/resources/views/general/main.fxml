@@ -27,18 +27,22 @@
                   <MenuItem fx:id="ordersItems" mnemonicParsing="false" onAction="#onViewOrdersButton" text="Просмотр" />
                </items>
           </Menu>
-            <Menu fx:id="closeOtherStages" mnemonicParsing="false" onAction="#onCloseOtherStages" text="Закрыть другие окна" />
+            <Menu mnemonicParsing="false" text="Опции">
+               <items>
+                  <MenuItem fx:id="closeOtherStagesItem" mnemonicParsing="false" onAction="#onCloseOtherStagesItem" text="Закрыть другие окна" />
+               </items>
+            </Menu>
           <Menu fx:id="adminMenu" mnemonicParsing="false" text="Администрирование" visible="false">
             <items>
               <MenuItem fx:id="consumablesItem" mnemonicParsing="false" onAction="#onConsumablesItem" text="Расходники" />
                   <MenuItem fx:id="servicesItem" mnemonicParsing="false" onAction="#onServicesItem" text="Услуги" />
-                  <MenuItem fx:id="usersItem" mnemonicParsing="false" onAction="#usersItem" text="Аккаунты" />
+                  <MenuItem fx:id="usersItem" mnemonicParsing="false" onAction="#onUsersItem" text="Аккаунты" />
                   <MenuItem fx:id="reportsItem" mnemonicParsing="false" onAction="#onReportsItem" text="Отчёты" />
             </items>
           </Menu>
             <Menu fx:id="masterMenu" mnemonicParsing="false" text="Мастерская" visible="false">
               <items>
-                <MenuItem fx:id="masterSсheduleItem" mnemonicParsing="false" onAction="#onMasterScheduleItem" text="Расписание" />
+                <MenuItem fx:id="masterScheduleItem" mnemonicParsing="false" onAction="#onMasterScheduleItem" text="Расписание" />
                   <MenuItem fx:id="masterSkillItem" mnemonicParsing="false" onAction="#onMasterSkillButton" text="Навыки" />
               </items>
             </Menu>

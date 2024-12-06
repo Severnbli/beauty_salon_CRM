@@ -7,7 +7,12 @@ import lombok.Data;
 @Data
 @Builder
 public class Role {
-    Long id;
-    String name;
-    Integer accessLevel;
+    private Long id;
+    private String name;
+    private Integer accessLevel;
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

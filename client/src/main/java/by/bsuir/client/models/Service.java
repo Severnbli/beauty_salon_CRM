@@ -9,8 +9,13 @@ import java.time.LocalTime;
 @Data
 @Builder
 public class Service {
-    Long id;
-    String name;
-    BigDecimal price;
-    LocalTime timeCost;
+    private Long id;
+    private String name;
+    private BigDecimal price;
+    private LocalTime timeCost;
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

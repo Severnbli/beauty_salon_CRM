@@ -8,9 +8,9 @@ import java.time.LocalTime;
 @Data
 @Builder
 public class MasterSchedule {
-    Long id;
-    Master master;
-    DayOfWeek dayOfWeek;
-    LocalTime startTime;
-    LocalTime endTime;
+    private Long id;
+    private Master master;
+    private DayOfWeek dayOfWeek;
+    private LocalTime startTime;
+    private LocalTime endTime;
 }

@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class ServiceConsumable {
-    Long id;
-    Service service;
-    Consumable consumable;
+    private Long id;
+    private Service service;
+    private Consumable consumable;
 }

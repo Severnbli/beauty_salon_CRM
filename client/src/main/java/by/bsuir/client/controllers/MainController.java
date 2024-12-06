@@ -1,5 +1,6 @@
 package by.bsuir.client.controllers;
 
+import by.bsuir.client.App;
 import by.bsuir.client.connection.ServerClient;
 import by.bsuir.client.models.User;
 import by.bsuir.client.utils.AlertUtil;
@@ -26,7 +27,7 @@ public class MainController implements Setupable {
     private Menu clientMenu;
 
     @FXML
-    private Menu closeOtherStages;
+    private MenuItem closeOtherStagesItem;
 
     @FXML
     private MenuItem consumablesItem;
@@ -106,7 +107,7 @@ public class MainController implements Setupable {
     }
 
     @FXML
-    void onCloseOtherStages(ActionEvent event) {
+    void onCloseOtherStagesItem(ActionEvent event) {
         closeAllOtherStages();
     }
 
@@ -115,12 +116,26 @@ public class MainController implements Setupable {
     }
 
     public static void closeAllOtherStagesExceptOne(Stage exceptStage) {
-        for (Stage stage: otherStages) {
+        for (int i = 0; i < otherStages.size(); i++) {
+            Stage stage = otherStages.get(i);
+            if (AccountManageController.getStage() != exceptStage) {
+                AccountManageController.setStage(null);
+            }
+
+            if (ServiceAppointmentController.getStage() != exceptStage) {
+                ServiceAppointmentController.setStage(null);
+            }
+
+            if (ViewOrdersController.getStage() != exceptStage) {
+                ViewOrdersController.setStage(null);
+            }
+
             if (stage != exceptStage) {
                 if (stage != null && stage.isShowing()) {
                     stage.close();
                 }
-                otherStages.remove(stage);
+                otherStages.remove(i);
+                i--;
             }
         }
     }
@@ -157,8 +172,22 @@ public class MainController implements Setupable {
 
     @FXML
     void onServiceAppointmentItem(ActionEvent event) throws IOException {
+        if (ServiceAppointmentController.getStage() != null) {
+            ServiceAppointmentController.getStage().toFront();
+            return;
+        }
+
         Stage stage = new Stage();
         otherStages.add(stage);
+
+        stage.setTitle(App.getPrimaryStage().getTitle() + " - Бронирование услуг");
+
+        stage.setOnCloseRequest(closeEvent -> {
+            ServiceAppointmentController.setStage(null);
+            otherStages.remove(stage);
+        });
+
+        ServiceAppointmentController.setStage(stage);
 
         Loader.loadScene(stage, "/views/general/service_appointment.fxml");
         stage.show();
@@ -171,8 +200,22 @@ public class MainController implements Setupable {
 
     @FXML
     void onUserAccountItem(ActionEvent event) throws IOException {
+        if (AccountManageController.getStage() != null) {
+            AccountManageController.getStage().toFront();
+            return;
+        }
+
         Stage stage = new Stage();
         otherStages.add(stage);
+
+        stage.setTitle(App.getPrimaryStage().getTitle() + " - Настройка профиля");
+
+        stage.setOnCloseRequest(closeEvent -> {
+            AccountManageController.setStage(null);
+            otherStages.remove(stage);
+        });
+
+        AccountManageController.setStage(stage);
 
         Loader.loadScene(stage, "/views/general/account_manage.fxml");
         stage.show();
@@ -180,15 +223,29 @@ public class MainController implements Setupable {
 
     @FXML
     void onViewOrdersButton(ActionEvent event) throws IOException {
+        if (ViewOrdersController.getStage() != null) {
+            ViewOrdersController.getStage().toFront();
+            return;
+        }
+
         Stage stage = new Stage();
         otherStages.add(stage);
+
+        stage.setTitle(App.getPrimaryStage().getTitle() + " - Просмотр записей");
+
+        stage.setOnCloseRequest(closeEvent -> {
+            ViewOrdersController.setStage(null);
+            otherStages.remove(stage);
+        });
+
+        ViewOrdersController.setStage(stage);
 
         Loader.loadScene(stage, "/views/general/view_orders.fxml");
         stage.show();
     }
 
     @FXML
-    void usersItem(ActionEvent event) {
+    void onUsersItem(ActionEvent event) {
 
     }
 }

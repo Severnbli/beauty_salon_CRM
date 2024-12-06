@@ -6,9 +6,14 @@ import lombok.Data;
 @Data
 @Builder
 public class User {
-    Long id;
-    String login;
-    String password;
-    Role role;
-    PersonData personData;
+    private Long id;
+    private String login;
+    private String password;
+    private Role role;
+    private PersonData personData;
+
+    @Override
+    public String toString() {
+        return login;
+    }
 }
