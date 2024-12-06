@@ -1,10 +1,13 @@
 package by.bsuir.server.db.dao;
 
+import by.bsuir.server.db.entities.DayOfWeek;
 import by.bsuir.server.db.entities.MasterSchedule;
 import by.bsuir.server.services.DBConnection;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public class MasterScheduleDAO implements DAO<MasterSchedule> {
@@ -53,6 +56,16 @@ public class MasterScheduleDAO implements DAO<MasterSchedule> {
     public Long count() {
         try (Session session = DBConnection.getSessionFactory().openSession()) {
             return session.createQuery("select count(*) from MasterSchedule", Long.class).getSingleResult();
+        }
+    }
+
+    public MasterSchedule getMasterScheduleTimeByDayOfWeek(Long masterId, DayOfWeek dayOfWeek) {
+        try (Session session = DBConnection.getSessionFactory().openSession()) {
+            final String hql = "from MasterSchedule where master_id = :masterId and day_of_week = :dayOfWeek";
+            return session.createQuery(hql, MasterSchedule.class)
+                    .setParameter("masterId", masterId)
+                    .setParameter("dayOfWeek", dayOfWeek.getRussianName())
+                    .getSingleResult();
         }
     }
 }

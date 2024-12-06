@@ -1,5 +1,6 @@
 package by.bsuir.server.db.dao;
 
+import by.bsuir.server.db.entities.Master;
 import by.bsuir.server.db.entities.MasterService;
 import by.bsuir.server.services.DBConnection;
 import org.hibernate.Session;
@@ -53,6 +54,13 @@ public class MasterServiceDAO implements DAO<MasterService> {
     public Long count() {
         try (Session session = DBConnection.getSessionFactory().openSession()) {
             return session.createQuery("select count(*) from MasterService", Long.class).getSingleResult();
+        }
+    }
+
+    public List<Master> getMastersByServiceId(Long serviceId) {
+        try (Session session = DBConnection.getSessionFactory().openSession()) {
+            final String hql = "from MasterService where service_id = :service_id";
+            return session.createQuery(hql, Master.class).setParameter("serviceId", serviceId).getResultList();
         }
     }
 }

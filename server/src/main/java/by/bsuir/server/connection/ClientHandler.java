@@ -1,11 +1,10 @@
 package by.bsuir.server.connection;
 
-import by.bsuir.server.services.RoleService;
+import by.bsuir.server.services.*;
 import by.bsuir.tcp.ResponseStatus;
 import by.bsuir.tcp.Request;
 import by.bsuir.tcp.Response;
 import org.apache.log4j.Logger;
-import by.bsuir.server.services.UserService;
 import by.bsuir.server.utils.Nullifable;
 
 import java.io.IOException;
@@ -20,8 +19,11 @@ public class ClientHandler implements Runnable, Nullifable {
     private Response response;
     private ObjectInputStream in;
     private ObjectOutputStream out;
-    UserService userService;
-    RoleService roleService;
+    private UserService userService;
+    private RoleService roleService;
+    private OrderService orderService;
+    private ServiceService serviceService;
+    private MasterServiceService masterServiceService;
 
     public ClientHandler(Socket socket) {
         this.socket = socket;
@@ -32,6 +34,9 @@ public class ClientHandler implements Runnable, Nullifable {
         in = new ObjectInputStream(socket.getInputStream());
         userService = new UserService();
         roleService = new RoleService();
+        orderService = new OrderService();
+        serviceService = new ServiceService();
+        masterServiceService = new MasterServiceService();
     }
 
     @Override
@@ -92,6 +97,26 @@ public class ClientHandler implements Runnable, Nullifable {
                     response = roleService.roleByAccessLevel(request);
                     break;
                 }
+                case REJECT_ORDER: {
+                    response = orderService.rejectOrder(request);
+                    break;
+                }
+                case GET_ORDERS_BY_USER_ID: {
+                    response = orderService.getOrdersByClientId(request);
+                    break;
+                }
+                case GET_ALL_SERVICES: {
+                    response = serviceService.getAllServices();
+                    break;
+                }
+                case GET_MASTERS_BY_SERVICE_AND_DATE: {
+                    response = masterServiceService.getMastersByServiceAndDate(request);
+                    break;
+                }
+                case ADD_ORDER: {
+                    response = orderService.addOrder(request);
+                    break;
+                }
                 default: {
                     response = Response.builder()
                             .status(ResponseStatus.ERROR)
@@ -128,9 +153,15 @@ public class ClientHandler implements Runnable, Nullifable {
 
             userService.nullify();
             roleService.nullify();
+            orderService.nullify();
+            serviceService.nullify();
+            masterServiceService.nullify();
 
             userService = null;
             roleService = null;
+            orderService = null;
+            serviceService = null;
+            masterServiceService = null;
 
             System.gc();
         }
