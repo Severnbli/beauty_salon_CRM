@@ -17,4 +17,9 @@ public enum DayOfWeek {
     DayOfWeek(String russianName) {
         this.russianName = russianName;
     }
+
+    @Override
+    public String toString() {
+        return russianName;
+    }
 }

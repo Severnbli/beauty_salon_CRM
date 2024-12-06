@@ -6,8 +6,13 @@ import lombok.Data;
 @Data
 @Builder
 public class Master {
-    Long id;
-    User user;
-    String note;
-    String grade;
+    private Long id;
+    private User user;
+    private String note;
+    private String grade;
+
+    @Override
+    public String toString() {
+        return user.getPersonData().getFirstName();
+    }
 }

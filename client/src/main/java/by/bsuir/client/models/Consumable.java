@@ -6,7 +6,12 @@ import lombok.Data;
 @Data
 @Builder
 public class Consumable {
-    Long id;
-    String name;
-    int quantity;
+    private Long id;
+    private String name;
+    private int quantity;
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

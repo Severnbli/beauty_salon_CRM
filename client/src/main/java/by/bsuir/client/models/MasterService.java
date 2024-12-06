@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class MasterService {
-    Long id;
-    Master master;
-    Service service;
+    private Long id;
+    private Master master;
+    private Service service;
 }

@@ -6,8 +6,13 @@ import lombok.Data;
 @Data
 @Builder
 public class PersonData {
-    Long id;
-    String firstName;
-    String lastName;
-    String email;
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String email;
+
+    @Override
+    public String toString() {
+        return firstName;
+    }
 }
