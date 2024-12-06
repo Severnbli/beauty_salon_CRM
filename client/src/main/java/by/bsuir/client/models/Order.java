@@ -8,10 +8,10 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class Order {
-    Long id;
-    User client;
-    Master master;
-    Service service;
-    LocalDateTime date;
-    StatusOfRecord statusOfRecord;
+    private Long id;
+    private User client;
+    private Master master;
+    private Service service;
+    private LocalDateTime date;
+    private StatusOfRecord statusOfRecord;
 }

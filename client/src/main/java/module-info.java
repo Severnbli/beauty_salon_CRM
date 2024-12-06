@@ -14,6 +14,7 @@ module by.bsuir.client {
     requires com.google.gson;
     requires java.logging;
     requires java.sql;
+    requires java.desktop;
 
     opens by.bsuir.client.controllers to javafx.fxml;
     opens by.bsuir.client.models to com.google.gson;

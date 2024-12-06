@@ -14,4 +14,9 @@ public enum StatusOfRecord {
     StatusOfRecord(String russianName) {
         this.russianName = russianName;
     }
+
+    @Override
+    public String toString() {
+        return russianName;
+    }
 }
