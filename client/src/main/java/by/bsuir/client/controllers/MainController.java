@@ -12,6 +12,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,7 +67,8 @@ public class MainController implements Setupable {
     @FXML
     private MenuItem usersItem;
 
-    private List<Stage> otherStages = new ArrayList<>();
+    @Getter
+    private static final List<Stage> otherStages = new ArrayList<>();
 
     @Override
     public void setup() {
@@ -105,11 +107,21 @@ public class MainController implements Setupable {
 
     @FXML
     void onCloseOtherStages(ActionEvent event) {
+        closeAllOtherStages();
+    }
+
+    public static void closeAllOtherStages() {
+        closeAllOtherStagesExceptOne(null);
+    }
+
+    public static void closeAllOtherStagesExceptOne(Stage exceptStage) {
         for (Stage stage: otherStages) {
-            if (stage != null && stage.isShowing()) {
-                stage.close();
+            if (stage != exceptStage) {
+                if (stage != null && stage.isShowing()) {
+                    stage.close();
+                }
+                otherStages.remove(stage);
             }
-            otherStages.remove(stage);
         }
     }
 
@@ -120,7 +132,7 @@ public class MainController implements Setupable {
 
     @FXML
     void onLogOutItem(ActionEvent event) throws IOException {
-        onCloseOtherStages(event);
+        closeAllOtherStages();
 
         ServerClient.getInstance().setUser(null);
 
