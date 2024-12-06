@@ -1,9 +1,11 @@
 package by.bsuir.client.controllers;
 
+import by.bsuir.client.App;
 import by.bsuir.client.connection.ServerClient;
 import by.bsuir.client.models.User;
 import by.bsuir.client.utils.AlertUtil;
 import by.bsuir.client.utils.EmailValidator;
+import by.bsuir.client.utils.Loader;
 import by.bsuir.client.utils.Setupable;
 import by.bsuir.tcp.Request;
 import by.bsuir.tcp.RequestType;
@@ -17,6 +19,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class AccountManageController implements Setupable {
     @FXML
@@ -71,8 +76,54 @@ public class AccountManageController implements Setupable {
     }
 
     @FXML
-    void onDelAccountButton(ActionEvent event) {
+    void onDelAccountButton(ActionEvent event) throws IOException {
+        ButtonType confirmation = AlertUtil.builder()
+                .alertType(Alert.AlertType.CONFIRMATION)
+                .header("Удаление профиля")
+                .content("Вы уверены?")
+                .build().realiseWithConfirmation();
 
+        if (confirmation == ButtonType.OK) {
+            final Gson gson = new Gson();
+            final User client = ServerClient.getInstance().getUser();
+
+            Request request = Request.builder()
+                    .type(RequestType.DELETE_PROFILE)
+                    .data(gson.toJson(client))
+                    .build();
+
+            Response response = ServerClient.getInstance().makeRequestAndGetResponse(
+                    request,
+                    "Удаление профиля"
+            );
+
+            if (response == null) {
+                return;
+            }
+
+            if (response.getStatus() == ResponseStatus.OK) {
+                AlertUtil.builder()
+                        .alertType(Alert.AlertType.INFORMATION)
+                        .header("Удаление профиля")
+                        .content("Удаление завершено успешно!")
+                        .build().realise();
+
+                ServerClient.getInstance().setUser(null);
+
+                Stage currentStage = (Stage) delAccountButton.getScene().getWindow();
+                MainController.closeAllOtherStagesExceptOne(currentStage);
+
+                Loader.loadScene(App.getPrimaryStage(), "/views/general/login.fxml");
+
+                MainController.closeAllOtherStages();
+            } else {
+                AlertUtil.builder()
+                        .alertType(Alert.AlertType.ERROR)
+                        .header("Удаление профиля")
+                        .content(response.getMessage())
+                        .build().realise();
+            }
+        }
     }
 
     @FXML
