@@ -5,7 +5,7 @@ import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.math.BigDecimal;
-import java.sql.Time;
+import java.time.LocalTime;
 import java.util.Objects;
 
 @Entity
@@ -26,7 +26,7 @@ public class Service {
     private BigDecimal price;
 
     @Column(name = "time_cost", nullable = false)
-    private Time timeCost;
+    private LocalTime timeCost;
 
     @Override
     public final boolean equals(Object o) {

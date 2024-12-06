@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -31,7 +31,7 @@ public class Order {
     private Service service;
 
     @Column(nullable = false)
-    private Timestamp date;
+    private LocalDateTime date;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status_of_record", nullable = false)
