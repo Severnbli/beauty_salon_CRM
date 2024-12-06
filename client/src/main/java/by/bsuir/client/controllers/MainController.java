@@ -2,10 +2,12 @@ package by.bsuir.client.controllers;
 
 import by.bsuir.client.connection.ServerClient;
 import by.bsuir.client.models.User;
+import by.bsuir.client.utils.AlertUtil;
 import by.bsuir.client.utils.Loader;
 import by.bsuir.client.utils.Setupable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
@@ -70,7 +72,17 @@ public class MainController implements Setupable {
     public void setup() {
         User client = ServerClient.getInstance().getUser();
 
-        if (client != null && client.getRole() != null) {
+        if (client == null) {
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.ERROR)
+                    .header("Система")
+                    .content("Пользователь не зарегистрирован. Пройдите этап авторизации.")
+                    .build().realise();
+
+            return;
+        }
+
+        if (client.getRole() != null) {
             switch (client.getRole().getAccessLevel()) {
                 case 111: { // Master
                     masterMenu.setVisible(true);
