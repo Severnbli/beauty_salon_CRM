@@ -20,7 +20,7 @@ public enum DayOfWeek {
         this.russianName = russianName;
     }
 
-    public DayOfWeek getDayOfWeekByDate(LocalDate date) {
+    public static DayOfWeek getDayOfWeekByDate(LocalDate date) {
         return switch (date.getDayOfWeek()) {
             case java.time.DayOfWeek.TUESDAY -> DayOfWeek.TUESDAY;
             case java.time.DayOfWeek.WEDNESDAY -> DayOfWeek.WEDNESDAY;
