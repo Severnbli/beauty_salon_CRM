@@ -55,4 +55,11 @@ public class OrderDAO implements DAO<Order> {
             return session.createQuery("select count(*) from Order", Long.class).getSingleResult();
         }
     }
+
+    public List<Order> getOrdersByClientId(Long clientId) {
+        try (Session session = DBConnection.getSessionFactory().openSession()) {
+            final String hql = "from Order where client_id = :clientId";
+            return session.createQuery(hql, Order.class).setParameter("clientId", clientId).getResultList();
+        }
+    }
 }

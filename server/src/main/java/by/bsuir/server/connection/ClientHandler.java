@@ -99,6 +99,10 @@ public class ClientHandler implements Runnable, Nullifable {
                     response = orderService.rejectOrder(request);
                     break;
                 }
+                case GET_ORDERS_BY_USER_ID: {
+                    response = orderService.getOrdersByClientId(request);
+                    break;
+                }
                 default: {
                     response = Response.builder()
                             .status(ResponseStatus.ERROR)
