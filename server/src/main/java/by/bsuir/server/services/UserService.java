@@ -84,11 +84,31 @@ public class UserService implements Nullifable {
     public Response updateProfile(Request req) {
         final User userFromRequest = gson.fromJson(req.getData(), User.class);
 
-        if (userFromRequest == null || userFromRequest.getPersonData() == null) {
-            return  Response.builder()
+        if (userFromRequest == null || userFromRequest.getPersonData() == null || userFromRequest.getRole() == null) {
+            return Response.builder()
                     .status(ResponseStatus.ERROR)
                     .message("Ошибка: данные о пользователе не разобраны!")
                     .build();
+        }
+
+        final User user = userDao.getById(userFromRequest.getId());
+
+        if (user == null) {
+            return Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Пользователь не корректен!")
+                    .build();
+        }
+
+        if (!user.getLogin().equals(userFromRequest.getLogin()) && userDao.getUserWithSuchLogin(userFromRequest.getLogin()) != null) {
+            return Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Пользователь с подобным логином уже существует!")
+                    .build();
+        }
+
+        if (!user.getPassword().equals(userFromRequest.getPassword())) {
+            userFromRequest.setPassword(BCrypt.hashpw(userFromRequest.getPassword(), BCrypt.gensalt()));
         }
 
         userDao.update(userFromRequest);
