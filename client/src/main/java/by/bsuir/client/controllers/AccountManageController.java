@@ -14,10 +14,7 @@ import by.bsuir.tcp.ResponseStatus;
 import com.google.gson.Gson;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.Getter;
@@ -45,7 +42,10 @@ public class AccountManageController implements Setupable {
     private TextField loginField;
 
     @FXML
-    private TextField passwordField;
+    private PasswordField passwordField;
+
+    @FXML
+    private PasswordField confirmPasswordField;
 
     @FXML
     private Button updateAccountButton;
@@ -72,6 +72,7 @@ public class AccountManageController implements Setupable {
             }
             loginField.setText(client.getLogin());
             passwordField.setText("");
+            confirmPasswordField.setText("");
         } else {
             AlertUtil.builder()
                     .alertType(Alert.AlertType.ERROR)
@@ -160,6 +161,15 @@ public class AccountManageController implements Setupable {
                     .alertType(Alert.AlertType.WARNING)
                     .header("Настройка профиля")
                     .content("Электронная почта не валидна!")
+                    .build().realise();
+            return;
+        }
+
+        if (!passwordField.getText().equals(confirmPasswordField.getText())) {
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.WARNING)
+                    .header("Настройка профиля")
+                    .content("Пароли не совпадают!")
                     .build().realise();
             return;
         }
