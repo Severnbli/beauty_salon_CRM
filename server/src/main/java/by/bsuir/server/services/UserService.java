@@ -121,6 +121,41 @@ public class UserService implements Nullifable {
                 .build();
     }
 
+    public Response deleteProfile(Request req) {
+        final User userFromRequest = gson.fromJson(req.getData(), User.class);
+
+        if (userFromRequest == null || userFromRequest.getPersonData() == null || userFromRequest.getRole() == null) {
+            return Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Ошибка: данные о пользователе не разобраны!")
+                    .build();
+        }
+
+        User user = userDao.getById(userFromRequest.getId());
+
+        if (user == null) {
+            return Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Пользователь не корректен!")
+                    .build();
+        }
+
+        if (user.getRole().getAccessLevel() >= 999) {
+            return Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Невозможно удаление аккаунта с ролью " + user.getRole().getName() + "!")
+                    .build();
+        }
+
+        userDao.delete(userFromRequest);
+        personDataDao.delete(userFromRequest.getPersonData());
+
+        return Response.builder()
+                .status(ResponseStatus.OK)
+                .message("Аккаунт успешно удалён!")
+                .build();
+    }
+
     @Override
     public void nullify() {
         personDataDao = null;
