@@ -1,9 +1,9 @@
 package by.bsuir.client.models;
 
-import java.sql.Time;
-
 import lombok.Builder;
 import lombok.Data;
+
+import java.time.LocalTime;
 
 @Data
 @Builder
@@ -11,6 +11,6 @@ public class MasterSchedule {
     Long id;
     Master master;
     DayOfWeek dayOfWeek;
-    Time startTime;
-    Time endTime;
+    LocalTime startTime;
+    LocalTime endTime;
 }

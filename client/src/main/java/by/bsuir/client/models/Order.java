@@ -3,7 +3,7 @@ package by.bsuir.client.models;
 import lombok.Builder;
 import lombok.Data;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -12,6 +12,6 @@ public class Order {
     User client;
     Master master;
     Service service;
-    Timestamp date;
+    LocalDateTime date;
     StatusOfRecord statusOfRecord;
 }
