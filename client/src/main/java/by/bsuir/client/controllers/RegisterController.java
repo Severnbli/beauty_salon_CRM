@@ -6,6 +6,7 @@ import by.bsuir.client.models.Role;
 import by.bsuir.client.models.User;
 import by.bsuir.client.utils.AlertUtil;
 import by.bsuir.client.utils.EmailValidator;
+import by.bsuir.client.utils.Loader;
 import by.bsuir.tcp.Request;
 import by.bsuir.tcp.RequestType;
 import by.bsuir.tcp.Response;
@@ -54,7 +55,7 @@ public class RegisterController {
     @FXML
     void onBackToLogin(ActionEvent event) throws IOException {
         Stage stage = (Stage) backToLoginButton.getScene().getWindow();
-        stage.setScene(new Scene(new FXMLLoader(getClass().getResource("/views/login.fxml")).load()));
+        stage.setScene(new Scene(new FXMLLoader(getClass().getResource("/views/general/login.fxml")).load()));
     }
 
     @FXML
@@ -151,7 +152,8 @@ public class RegisterController {
                     .build().realise();
 
             Stage stage = (Stage) registerButton.getScene().getWindow();
-            stage.setScene(new Scene(new FXMLLoader(getClass().getResource("/views/login.fxml")).load()));
+
+            Loader.loadScene(stage, "/views/general/login.fxml");
         }
     }
 

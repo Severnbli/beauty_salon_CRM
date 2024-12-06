@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="by.bsuir.client.controllers.ServiceAppointmentController">
+   <children>
+      <VBox fx:id="serviceAppointmentScreen" alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0" spacing="12.0">
+         <children>
+            <TableView fx:id="servicesTable" prefHeight="180.0" prefWidth="600.0">
+              <columns>
+                <TableColumn fx:id="serviceNameColumn" prefWidth="250.0" text="Наименование" />
+                <TableColumn fx:id="servicePriceColumn" prefWidth="175.0" text="Цена" />
+                  <TableColumn fx:id="serviceTimeCostColumn" prefWidth="175.0" text="Длительность" />
+              </columns>
+            </TableView>
+            <HBox alignment="CENTER" prefHeight="40.0" prefWidth="600.0" spacing="20.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Выберите дату">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Text>
+                  <DatePicker fx:id="datePicker" />
+               </children>
+            </HBox>
+            <Button fx:id="getMasters" mnemonicParsing="false" onAction="#onGetMasters" text="Отобразить доступных мастеров" />
+            <Separator prefWidth="200.0" />
+            <HBox alignment="CENTER" prefHeight="40.0" prefWidth="200.0" spacing="20.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Мастер">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Text>
+                  <ComboBox fx:id="mastersComboBox" onAction="#onMastersComoBox" prefWidth="150.0" />
+                  <Separator orientation="VERTICAL" prefHeight="200.0" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Время">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Text>
+                  <ComboBox fx:id="timeComoBox" prefWidth="150.0" />
+               </children>
+            </HBox>
+            <Separator prefWidth="200.0" />
+            <Button fx:id="oderButton" mnemonicParsing="false" onAction="#onOrderButton" text="Забронировать" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
