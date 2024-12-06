@@ -14,7 +14,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        stage.setScene(new Scene(new FXMLLoader(getClass().getResource("/views/login.fxml")).load()));
+        stage.setScene(new Scene(new FXMLLoader(getClass().getResource("/views/general/login.fxml")).load()));
         stage.setTitle(TITLE_NAME);
         stage.setResizable(false);
         stage.show();

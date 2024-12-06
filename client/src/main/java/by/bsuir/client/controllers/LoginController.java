@@ -44,7 +44,7 @@ public class LoginController {
     @FXML
     void onRegister(ActionEvent event) throws IOException {
         Stage stage = (Stage) loginButton.getScene().getWindow();
-        stage.setScene(new Scene(new FXMLLoader(getClass().getResource("/views/register.fxml")).load()));
+        stage.setScene(new Scene(new FXMLLoader(getClass().getResource("/views/general/register.fxml")).load()));
     }
 
     @FXML
@@ -79,7 +79,7 @@ public class LoginController {
         if (response.getStatus() == ResponseStatus.OK) {
             ServerClient.getInstance().setUser(gson.fromJson(response.getData(), User.class));
             Stage stage = (Stage) loginButton.getScene().getWindow();
-            stage.setScene(new Scene(new FXMLLoader(getClass().getResource("/views/main.fxml")).load()));
+            stage.setScene(new Scene(new FXMLLoader(getClass().getResource("/views/general/main.fxml")).load()));
         } else {
             AlertUtil.builder()
                     .alertType(Alert.AlertType.WARNING)

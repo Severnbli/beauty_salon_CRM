@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="by.bsuir.client.controllers.MainController">
+   <children>
+      <MenuBar layoutY="1.0" prefHeight="26.0" prefWidth="600.0">
+        <menus>
+          <Menu fx:id="clientMenu" mnemonicParsing="false" text="Аккаунт">
+            <items>
+              <MenuItem fx:id="userAccountItem" mnemonicParsing="false" onAction="#onUserAccountItem" text="Настройки" />
+                  <MenuItem fx:id="logOutItem" mnemonicParsing="false" onAction="#onLogOutItem" text="Выход" />
+            </items>
+          </Menu>
+          <Menu fx:id="servicesMenu" mnemonicParsing="false" text="Услуги">
+               <items>
+                  <MenuItem fx:id="serviceAppointmentItem" mnemonicParsing="false" onAction="#onServiceAppointmentItem" text="Запись" />
+                  <MenuItem fx:id="ordersItems" mnemonicParsing="false" onAction="#onViewOrdersButton" text="Просмотр" />
+               </items>
+          </Menu>
+            <Menu fx:id="closeOtherStages" mnemonicParsing="false" onAction="#onCloseOtherStages" text="Закрыть другие окна" />
+          <Menu fx:id="adminMenu" mnemonicParsing="false" text="Администрирование" visible="false">
+            <items>
+              <MenuItem fx:id="consumablesItem" mnemonicParsing="false" onAction="#onConsumablesItem" text="Расходники" />
+                  <MenuItem fx:id="servicesItem" mnemonicParsing="false" onAction="#onServicesItem" text="Услуги" />
+                  <MenuItem fx:id="usersItem" mnemonicParsing="false" onAction="#usersItem" text="Аккаунты" />
+                  <MenuItem fx:id="reportsItem" mnemonicParsing="false" onAction="#onReportsItem" text="Отчёты" />
+            </items>
+          </Menu>
+            <Menu fx:id="masterMenu" mnemonicParsing="false" text="Мастерская" visible="false">
+              <items>
+                <MenuItem fx:id="masterSсheduleItem" mnemonicParsing="false" onAction="#onMasterScheduleItem" text="Расписание" />
+                  <MenuItem fx:id="masterSkillItem" mnemonicParsing="false" onAction="#onMasterSkillButton" text="Навыки" />
+              </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+      <VBox fx:id="mainScreenWindow" alignment="CENTER" layoutY="26.0" prefHeight="374.0" prefWidth="600.0" spacing="80.0">
+         <children>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../pictures/logo.png" />
+               </image>
+            </ImageView>
+            <Text boundsType="VISUAL" strokeType="OUTSIDE" strokeWidth="0.0" text="Добро пожаловать в автоматизированную систему косметического салона!" textAlignment="CENTER" wrappingWidth="450.0">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
