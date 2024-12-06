@@ -5,6 +5,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainController {
     @FXML
@@ -55,9 +59,16 @@ public class MainController {
     @FXML
     private MenuItem usersItem;
 
+    private List<Stage> otherStages = new ArrayList<>();
+
     @FXML
     void onCloseOtherStages(ActionEvent event) {
-
+        for (Stage stage: otherStages) {
+            if (stage != null && stage.isShowing()) {
+                stage.close();
+            }
+            otherStages.remove(stage);
+        }
     }
 
     @FXML
@@ -109,5 +120,4 @@ public class MainController {
     void usersItem(ActionEvent event) {
 
     }
-
 }
