@@ -1,6 +1,7 @@
 package by.bsuir.client.utils;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,11 +13,19 @@ public class AlertUtil {
     private Alert.AlertType alertType;
 
     public void realise() {
+        complete().showAndWait();
+    }
+
+    public ButtonType realiseWithConfirmation() {
+        return complete().showAndWait().orElse(ButtonType.CANCEL);
+    }
+
+    public Alert complete() {
         Alert alert = new Alert(alertType);
         alert.setTitle("CRM - Салон красоты");
         alert.setHeaderText(header);
         alert.setContentText(content);
 
-        alert.showAndWait();
+        return alert;
     }
 }
