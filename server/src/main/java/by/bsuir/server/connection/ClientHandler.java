@@ -80,6 +80,10 @@ public class ClientHandler implements Runnable, Nullifable {
                     response = userService.register(request);
                     break;
                 }
+                case DELETE_PROFILE: {
+                    response = userService.deleteProfile(request);
+                    break;
+                }
                 case UPDATE_PROFILE: {
                     response = userService.updateProfile(request);
                     break;
