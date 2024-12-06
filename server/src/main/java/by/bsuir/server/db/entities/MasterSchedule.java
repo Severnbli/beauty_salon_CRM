@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.sql.Time;
+import java.time.LocalTime;
 import java.util.Objects;
 
 @Entity
@@ -27,10 +27,10 @@ public class MasterSchedule {
     private DayOfWeek dayOfWeek;
 
     @Column(name = "start_time", nullable = false)
-    private Time startTime;
+    private LocalTime startTime;
 
     @Column(name = "end_time", nullable = false)
-    private Time endTime;
+    private LocalTime endTime;
 
     @Override
     public final boolean equals(Object o) {
