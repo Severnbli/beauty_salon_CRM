@@ -6,12 +6,14 @@ import by.bsuir.server.utils.Nullifable;
 import by.bsuir.tcp.Request;
 import by.bsuir.tcp.Response;
 import by.bsuir.tcp.ResponseStatus;
+import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
 public class ServiceService implements Nullifable {
-    private Gson gson = new Gson();
+    private Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
     private ServiceDAO serviceDAO = new ServiceDAO();
 
     public Response getAllServices() {

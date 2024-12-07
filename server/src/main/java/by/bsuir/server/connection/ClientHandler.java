@@ -24,6 +24,7 @@ public class ClientHandler implements Runnable, Nullifable {
     private OrderService orderService;
     private ServiceService serviceService;
     private MasterServiceService masterServiceService;
+    private MasterServices masterServices;
 
     public ClientHandler(Socket socket) {
         this.socket = socket;
@@ -37,6 +38,7 @@ public class ClientHandler implements Runnable, Nullifable {
         orderService = new OrderService();
         serviceService = new ServiceService();
         masterServiceService = new MasterServiceService();
+        masterServices = new MasterServices();
     }
 
     @Override
@@ -117,6 +119,10 @@ public class ClientHandler implements Runnable, Nullifable {
                     response = orderService.addOrder(request);
                     break;
                 }
+                case GET_MASTER_BY_ID: {
+                    response = masterServices.getMasterById(request);
+                    break;
+                }
                 default: {
                     response = Response.builder()
                             .status(ResponseStatus.ERROR)
@@ -156,12 +162,14 @@ public class ClientHandler implements Runnable, Nullifable {
             orderService.nullify();
             serviceService.nullify();
             masterServiceService.nullify();
+            masterServices.nullify();
 
             userService = null;
             roleService = null;
             orderService = null;
             serviceService = null;
             masterServiceService = null;
+            masterServices = null;
 
             System.gc();
         }

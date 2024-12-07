@@ -5,14 +5,16 @@ import by.bsuir.server.db.entities.DayOfWeek;
 import by.bsuir.server.db.entities.Master;
 import by.bsuir.server.db.entities.MasterSchedule;
 import by.bsuir.server.utils.Nullifable;
+import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MasterScheduleService implements Nullifable {
     private MasterScheduleDAO masterScheduleDAO = new MasterScheduleDAO();
-    private Gson gson = new Gson();
+    private Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
 
     public List<MasterSchedule> getMastersSchedulesByMastersIdsAndDayOfWeek(List<Master> masters, DayOfWeek dayOfWeek) {
         List<MasterSchedule> mastersSchedules = new ArrayList<>();

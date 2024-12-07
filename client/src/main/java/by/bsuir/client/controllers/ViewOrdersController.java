@@ -11,8 +11,11 @@ import by.bsuir.tcp.Request;
 import by.bsuir.tcp.RequestType;
 import by.bsuir.tcp.Response;
 import by.bsuir.tcp.ResponseStatus;
+import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,7 +26,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.lang.reflect.Type;
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 
@@ -32,7 +35,7 @@ public class ViewOrdersController implements Setupable {
     private Button delOrderButton;
 
     @FXML
-    private TableColumn<Order, LocalDateTime> orderDateTimeColumn;
+    private TableColumn<Order, String> orderDateTimeColumn;
 
     @FXML
     private TableColumn<Order, Master> orderMasterColumn;
@@ -56,6 +59,7 @@ public class ViewOrdersController implements Setupable {
 
         if (selectedOrder == null) {
             AlertUtil.builder()
+                    .alertType(Alert.AlertType.INFORMATION)
                     .header("Отмена записи")
                     .content("Для удаления требуется выбрать, что удалять!")
                     .build().realise();
@@ -63,13 +67,14 @@ public class ViewOrdersController implements Setupable {
         }
 
         ButtonType confirmation = AlertUtil.builder()
+                .alertType(Alert.AlertType.CONFIRMATION)
                 .header("Отмена записи")
                 .content("Вы точно хотите удалить запись " + selectedOrder.getService().getName() + " " +
                         selectedOrder.getDate() + "?")
                 .build().realiseWithConfirmation();
 
         if (confirmation == ButtonType.OK) {
-            final Gson gson = new Gson();
+            final Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
 
             Request request = Request.builder()
                     .type(RequestType.REJECT_ORDER)
@@ -87,33 +92,36 @@ public class ViewOrdersController implements Setupable {
 
             if (response.getStatus() != ResponseStatus.OK) {
                 AlertUtil.builder()
-                        .header("Удаление записи")
-                        .content(response.getMessage())
-                        .build().realise();
-
-                loadTable();
-            } else {
-                AlertUtil.builder()
                         .alertType(Alert.AlertType.ERROR)
                         .header("Отмена записи")
                         .content(response.getMessage())
                         .build().realise();
+            } else {
+                AlertUtil.builder()
+                        .alertType(Alert.AlertType.INFORMATION)
+                        .header("Отмена записи")
+                        .content(response.getMessage())
+                        .build().realise();
+
+                loadTable();
             }
         }
     }
 
     @Override
     public void setup() {
-        orderDateTimeColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         orderMasterColumn.setCellValueFactory(new PropertyValueFactory<>("master"));
         orderServiceColumn.setCellValueFactory(new PropertyValueFactory<>("service"));
         orderStatusColumn.setCellValueFactory(new PropertyValueFactory<>("statusOfRecord"));
+        orderDateTimeColumn.setCellValueFactory(cellData ->
+            new SimpleStringProperty(cellData.getValue().getDate().format(DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy")))
+        );
 
         loadTable();
     }
 
     private void loadTable() {
-        final Gson gson = new Gson();
+        final Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
 
         Request request = Request.builder()
                 .type(RequestType.GET_ORDERS_BY_USER_ID)
@@ -138,7 +146,7 @@ public class ViewOrdersController implements Setupable {
             orderDateTimeColumn.setComparator(Comparator.naturalOrder());
 
             ordersTable.getSortOrder().clear();
-            ordersTable.getSortOrder().add(orderDateTimeColumn);
+            ordersTable.getSortOrder().add(orderStatusColumn);
             ordersTable.sort();
         } else {
             AlertUtil.builder()

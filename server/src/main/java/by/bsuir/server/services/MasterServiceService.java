@@ -8,7 +8,9 @@ import by.bsuir.server.utils.Nullifable;
 import by.bsuir.tcp.Request;
 import by.bsuir.tcp.Response;
 import by.bsuir.tcp.ResponseStatus;
+import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,7 +22,7 @@ public class MasterServiceService implements Nullifable {
     MasterScheduleService masterScheduleService = new MasterScheduleService();
     private MasterServiceDAO masterServiceDAO = new MasterServiceDAO();
     private OrderDAO orderDAO = new OrderDAO();
-    private Gson gson = new Gson();
+    private Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
 
     public Response getMastersByServiceAndDate(Request req) {
         final Order orderFromRequest = gson.fromJson(req.getData(), Order.class);
@@ -53,7 +55,7 @@ public class MasterServiceService implements Nullifable {
                     .build();
         }
 
-        final HashMap<Master, List<LocalTime>> resultMastersTimes = new HashMap<>();
+        final HashMap<Long, List<LocalTime>> resultMastersTimes = new HashMap<>();
 
         for (MasterSchedule masterSchedule : mastersSchedules) {
             final List<Order> ordersWhichMasterInvolved = orderDAO.getOrdersByMasterAndDate(
@@ -64,10 +66,12 @@ public class MasterServiceService implements Nullifable {
             List<LocalTime> availableTimes = findAvailableTimes(
                     masterSchedule,
                     ordersWhichMasterInvolved,
-                    orderFromRequest.getService());
+                    orderFromRequest.getService(),
+                    LocalDate.from(orderFromRequest.getDate())
+            );
 
             if (!availableTimes.isEmpty()) {
-                resultMastersTimes.put(masterSchedule.getMaster(), availableTimes);
+                resultMastersTimes.put(masterSchedule.getMaster().getId(), availableTimes);
             }
         }
 
@@ -85,17 +89,36 @@ public class MasterServiceService implements Nullifable {
                 .build();
     }
 
-    public static List<LocalTime> findAvailableTimes(MasterSchedule masterSchedule, List<Order> orders, Service service) {
+    public static List<LocalTime> findAvailableTimes(
+            MasterSchedule masterSchedule,
+            List<Order> orders,
+            Service service,
+            LocalDate fromDate
+    ) {
         List<LocalTime> availableTimes = new ArrayList<>();
 
         LocalTime serviceDuration = service.getTimeCost();
 
-        for (LocalTime currentTime = masterSchedule.getStartTime();
+        LocalTime startTime = masterSchedule.getStartTime();
+
+        if (LocalDate.now().isEqual(fromDate) && LocalTime.now().isAfter(startTime)) {
+            if (LocalTime.now().getMinute() > 30) {
+                startTime = LocalTime.now().plusMinutes(60 - startTime.getMinute());
+            } else {
+                startTime = LocalTime.now().plusMinutes(30 - startTime.getMinute());
+            }
+        }
+
+        for (LocalTime currentTime = startTime;
              !currentTime.isAfter(masterSchedule.getEndTime().minusSeconds(serviceDuration.toSecondOfDay()));
              currentTime = currentTime.plusMinutes(30)) {
 
             final LocalTime finalCurrentTime = currentTime;
             boolean isTimeOccupied = orders.stream().anyMatch(order -> {
+                if (order.getStatusOfRecord() != StatusOfRecord.REGISTERED) {
+                    return false;
+                }
+
                 LocalTime orderStart = order.getDate().toLocalTime();
                 LocalTime orderEnd = orderStart.plusSeconds(order.getService().getTimeCost().toSecondOfDay());
                 return !(finalCurrentTime.plusSeconds(serviceDuration.toSecondOfDay()).isBefore(orderStart) || finalCurrentTime.isAfter(orderEnd));

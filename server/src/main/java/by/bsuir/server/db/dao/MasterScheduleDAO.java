@@ -61,10 +61,10 @@ public class MasterScheduleDAO implements DAO<MasterSchedule> {
 
     public MasterSchedule getMasterScheduleTimeByDayOfWeek(Long masterId, DayOfWeek dayOfWeek) {
         try (Session session = DBConnection.getSessionFactory().openSession()) {
-            final String hql = "from MasterSchedule where master_id = :masterId and day_of_week = :dayOfWeek";
+            final String hql = "from MasterSchedule where master.id = :masterId and dayOfWeek = :dayOfWeek";
             return session.createQuery(hql, MasterSchedule.class)
                     .setParameter("masterId", masterId)
-                    .setParameter("dayOfWeek", dayOfWeek.getRussianName())
+                    .setParameter("dayOfWeek", dayOfWeek)
                     .getSingleResult();
         }
     }

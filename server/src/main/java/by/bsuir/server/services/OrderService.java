@@ -10,7 +10,9 @@ import by.bsuir.server.utils.Nullifable;
 import by.bsuir.tcp.Request;
 import by.bsuir.tcp.Response;
 import by.bsuir.tcp.ResponseStatus;
+import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -22,7 +24,7 @@ public class OrderService implements Nullifable {
     private OrderDAO orderDAO = new OrderDAO();
     private UserDAO userDAO = new UserDAO();
     private MasterServiceService masterServiceService = new MasterServiceService();
-    private Gson gson = new Gson();
+    private Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
 
     public Response rejectOrder(Request req) {
         final Order orderFromRequest = gson.fromJson(req.getData(), Order.class);
@@ -111,11 +113,13 @@ public class OrderService implements Nullifable {
             return selfResponse;
         }
 
-        Type mapType = new TypeToken<HashMap<Master, List<LocalTime>>>() {}.getType();
-        HashMap<Master, List<LocalTime>> nowMastersWithAvailableTimes = gson.fromJson(selfResponse.getData(), mapType);
+        Type mapType = new TypeToken<HashMap<Long, List<LocalTime>>>() {}.getType();
+        HashMap<Long, List<LocalTime>> nowMastersWithAvailableTimes = gson.fromJson(selfResponse.getData(), mapType);
 
-        if (nowMastersWithAvailableTimes.containsKey(orderFromRequest.getMaster()) &&
-            nowMastersWithAvailableTimes.get(orderFromRequest.getMaster()).contains(orderFromRequest.getDate().toLocalTime())) {
+        if (nowMastersWithAvailableTimes.containsKey(orderFromRequest.getMaster().getId()) &&
+            nowMastersWithAvailableTimes.get(orderFromRequest.getMaster().getId()).contains(orderFromRequest.getDate().toLocalTime())) {
+            orderFromRequest.setStatusOfRecord(StatusOfRecord.REGISTERED);
+
             orderDAO.save(orderFromRequest);
 
             return Response.builder()

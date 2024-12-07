@@ -8,7 +8,9 @@ import by.bsuir.tcp.ResponseStatus;
 import by.bsuir.client.models.User;
 import by.bsuir.tcp.Request;
 import by.bsuir.tcp.Response;
+import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -64,7 +66,7 @@ public class LoginController {
                 .password(passwordField.getText())
                 .build();
 
-        Gson gson = new Gson();
+        Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
 
         Response response = ServerClient.getInstance().makeRequestAndGetResponse(
                 Request.builder()

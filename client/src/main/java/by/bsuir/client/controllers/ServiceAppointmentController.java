@@ -10,7 +10,9 @@ import by.bsuir.tcp.Request;
 import by.bsuir.tcp.RequestType;
 import by.bsuir.tcp.Response;
 import by.bsuir.tcp.ResponseStatus;
+import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -26,6 +28,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -62,7 +65,7 @@ public class ServiceAppointmentController implements Setupable {
 
     private Service lastLoadingService;
     private LocalDate lastLoadingDate;
-    private HashMap<Master, List<LocalTime>> lastLoadingMastersWithAvailableTimes = new HashMap<>();
+    private HashMap<Long, List<LocalTime>> lastLoadingMastersWithAvailableTimes;
 
     @Setter
     @Getter
@@ -96,16 +99,20 @@ public class ServiceAppointmentController implements Setupable {
             AlertUtil.builder()
                     .alertType(Alert.AlertType.WARNING)
                     .header("Бронирование услуг")
-                    .content("Выбранная дата не валидна. Выберите другую дату!");
+                    .content("Выбранная дата не валидна. Выберите другую дату!")
+                    .build().realise();
             return;
         }
+
+        timeComoBox.getItems().clear();
+        mastersComboBox.getItems().clear();
 
         Order order = Order.builder()
                 .service(selectedService)
                 .date(selectedDate.atStartOfDay())
                 .build();
 
-        final Gson gson = new Gson();
+        final Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
 
         Request request = Request.builder()
                 .type(RequestType.GET_MASTERS_BY_SERVICE_AND_DATE)
@@ -131,10 +138,51 @@ public class ServiceAppointmentController implements Setupable {
         }
 
         lastLoadingDate = selectedDate;
-        Type mapType = new TypeToken<HashMap<Master, List<LocalTime>>>() {}.getType();
+
+        Type mapType = new TypeToken<HashMap<Long, List<LocalTime>>>() {}.getType();
         lastLoadingMastersWithAvailableTimes = gson.fromJson(response.getData(), mapType);
 
-        mastersComboBox.setItems(FXCollections.observableArrayList(lastLoadingMastersWithAvailableTimes.keySet()));
+        List<Master> lastLoadingMasters = new ArrayList<>();
+
+        for (Long id : lastLoadingMastersWithAvailableTimes.keySet()) {
+            request = Request.builder()
+                    .type(RequestType.GET_MASTER_BY_ID)
+                    .data(id.toString())
+                    .build();
+
+            response = ServerClient.getInstance().makeRequestAndGetResponse(
+                    request,
+                    "Бронирование услуг"
+            );
+
+            if (response == null) {
+                AlertUtil.builder()
+                        .alertType(Alert.AlertType.WARNING)
+                        .header("Бронирование услуг")
+                        .content("Мастера " + id + " не получилось подгрузить!")
+                        .build().realise();
+            } else {
+                lastLoadingMasters.add(gson.fromJson(response.getData(), Master.class));
+            }
+        }
+
+        lastLoadingService = selectedService;
+
+        if (lastLoadingMasters.isEmpty()) {
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.WARNING)
+                    .header("Бронирование услуг")
+                    .content("Ни одного мастера подгрузить не вышло!")
+                    .build().realise();
+        } else {
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.INFORMATION)
+                    .header("Бронирование услуг")
+                    .content("Мастера подгружены успешно!")
+                    .build().realise();
+        }
+
+        mastersComboBox.setItems(FXCollections.observableArrayList(lastLoadingMasters));
     }
 
     @FXML
@@ -145,7 +193,7 @@ public class ServiceAppointmentController implements Setupable {
             return;
         }
 
-        timeComoBox.setItems(FXCollections.observableArrayList(lastLoadingMastersWithAvailableTimes.get(selectedMaster)));
+        timeComoBox.setItems(FXCollections.observableArrayList(lastLoadingMastersWithAvailableTimes.get(selectedMaster.getId())));
     }
 
     @FXML
@@ -200,7 +248,7 @@ public class ServiceAppointmentController implements Setupable {
                 .date(selectedDate.atTime(selectedTime))
                 .build();
 
-        final Gson gson = new Gson();
+        final Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
 
         Request request = Request.builder()
                 .type(RequestType.ADD_ORDER)
@@ -258,7 +306,7 @@ public class ServiceAppointmentController implements Setupable {
         }
 
         if (response.getStatus() == ResponseStatus.OK) {
-            final Gson gson = new Gson();
+            final Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
 
             Type listType = new TypeToken<List<Service>>() {}.getType();
             List<Service> services = gson.fromJson(response.getData(), listType);

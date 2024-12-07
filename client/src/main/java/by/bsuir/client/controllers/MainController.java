@@ -90,14 +90,17 @@ public class MainController implements Setupable {
                 case 111: { // Master
                     masterMenu.setVisible(true);
                     adminMenu.setVisible(false);
+                    servicesMenu.setVisible(false);
                     break;
                 }
                 case 555, 999: { // Admin
                     masterMenu.setVisible(false);
                     adminMenu.setVisible(true);
+                    servicesMenu.setVisible(false);
                     break;
                 }
                 default: {
+                    servicesMenu.setVisible(true);
                     masterMenu.setVisible(false);
                     adminMenu.setVisible(false);
                     break;

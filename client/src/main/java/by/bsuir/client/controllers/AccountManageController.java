@@ -11,7 +11,9 @@ import by.bsuir.tcp.Request;
 import by.bsuir.tcp.RequestType;
 import by.bsuir.tcp.Response;
 import by.bsuir.tcp.ResponseStatus;
+import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -91,7 +93,7 @@ public class AccountManageController implements Setupable {
                 .build().realiseWithConfirmation();
 
         if (confirmation == ButtonType.OK) {
-            final Gson gson = new Gson();
+            final Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
             final User client = ServerClient.getInstance().getUser();
 
             Request request = Request.builder()
@@ -189,7 +191,7 @@ public class AccountManageController implements Setupable {
             client.getPersonData().setLastName(lastNameField.getText());
             client.getPersonData().setEmail(emailField.getText());
 
-            final Gson gson = new Gson();
+            final Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
 
             Request request = Request.builder()
                     .type(RequestType.UPDATE_PROFILE)

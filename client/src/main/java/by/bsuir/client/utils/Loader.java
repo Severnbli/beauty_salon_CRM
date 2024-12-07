@@ -18,6 +18,8 @@ public class Loader {
             ((Setupable) controller).setup();
         }
 
+        stage.setResizable(false);
+
         stage.setScene(new Scene(root));
     }
 }

@@ -1,16 +1,15 @@
 package by.bsuir.server.services;
 
 import by.bsuir.server.db.dao.PersonDataDAO;
-import by.bsuir.server.db.dao.RoleDAO;
 import by.bsuir.server.db.dao.UserDAO;
-import by.bsuir.server.db.entities.PersonData;
-import by.bsuir.server.db.entities.Role;
+import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.gson.Gson;
 import by.bsuir.server.db.entities.User;
 import by.bsuir.tcp.ResponseStatus;
 import by.bsuir.tcp.Request;
 import by.bsuir.tcp.Response;
 import by.bsuir.server.utils.Nullifable;
+import com.google.gson.GsonBuilder;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.List;
 public class UserService implements Nullifable {
     private PersonDataDAO personDataDao = new PersonDataDAO();
     private UserDAO userDao = new UserDAO();
-    private Gson gson = new Gson();
+    private Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
 
     public Response login(Request req) {
         final User userFromRequest = gson.fromJson(req.getData(), User.class);

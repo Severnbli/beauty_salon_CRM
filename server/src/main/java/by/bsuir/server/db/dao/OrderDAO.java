@@ -59,18 +59,18 @@ public class OrderDAO implements DAO<Order> {
 
     public List<Order> getOrdersByClientId(Long clientId) {
         try (Session session = DBConnection.getSessionFactory().openSession()) {
-            final String hql = "from Order where client_id = :clientId";
+            final String hql = "from Order where client.id = :clientId";
             return session.createQuery(hql, Order.class).setParameter("clientId", clientId).getResultList();
         }
     }
 
     public List<Order> getOrdersByMasterAndDate(Long masterId, LocalDate date) {
         try (Session session = DBConnection.getSessionFactory().openSession()) {
-            final String hql = "from Order where master_id = :masterId and date between :date_1 and :date_2";
+            final String hql = "from Order where master.id = :masterId and date between :date1 and :date2";
             return session.createQuery(hql, Order.class)
-                    .setParameter("master_id", masterId)
-                    .setParameter("date_1", date.atStartOfDay())
-                    .setParameter("date_2", date.atTime(23, 59, 59))
+                    .setParameter("masterId", masterId)
+                    .setParameter("date1", date.atStartOfDay())
+                    .setParameter("date2", date.atTime(23, 59, 59))
                     .getResultList();
         }
     }

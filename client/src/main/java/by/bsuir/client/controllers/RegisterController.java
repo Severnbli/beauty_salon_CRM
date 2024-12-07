@@ -11,7 +11,9 @@ import by.bsuir.tcp.Request;
 import by.bsuir.tcp.RequestType;
 import by.bsuir.tcp.Response;
 import by.bsuir.tcp.ResponseStatus;
+import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -110,7 +112,7 @@ public class RegisterController {
             return;
         }
 
-        final Gson gson = new Gson();
+        final Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
 
         Role role = gson.fromJson(response.getData(), Role.class);
 

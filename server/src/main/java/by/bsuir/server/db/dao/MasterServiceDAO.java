@@ -59,8 +59,10 @@ public class MasterServiceDAO implements DAO<MasterService> {
 
     public List<Master> getMastersByServiceId(Long serviceId) {
         try (Session session = DBConnection.getSessionFactory().openSession()) {
-            final String hql = "from MasterService where service_id = :service_id";
-            return session.createQuery(hql, Master.class).setParameter("serviceId", serviceId).getResultList();
+            final String hql = "SELECT ms.master FROM MasterService ms WHERE ms.service.id = :serviceId";
+            return session.createQuery(hql, Master.class)
+                    .setParameter("serviceId", serviceId)
+                    .getResultList();
         }
     }
 }

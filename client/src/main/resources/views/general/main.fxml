@@ -10,7 +10,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="by.bsuir.client.controllers.MainController">
    <children>
       <MenuBar layoutY="1.0" prefHeight="26.0" prefWidth="600.0">
@@ -27,11 +26,6 @@
                   <MenuItem fx:id="ordersItems" mnemonicParsing="false" onAction="#onViewOrdersButton" text="Просмотр" />
                </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="Опции">
-               <items>
-                  <MenuItem fx:id="closeOtherStagesItem" mnemonicParsing="false" onAction="#onCloseOtherStagesItem" text="Закрыть другие окна" />
-               </items>
-            </Menu>
           <Menu fx:id="adminMenu" mnemonicParsing="false" text="Администрирование" visible="false">
             <items>
               <MenuItem fx:id="consumablesItem" mnemonicParsing="false" onAction="#onConsumablesItem" text="Расходники" />
@@ -45,6 +39,11 @@
                 <MenuItem fx:id="masterScheduleItem" mnemonicParsing="false" onAction="#onMasterScheduleItem" text="Расписание" />
                   <MenuItem fx:id="masterSkillItem" mnemonicParsing="false" onAction="#onMasterSkillButton" text="Навыки" />
               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Опции">
+               <items>
+                  <MenuItem fx:id="closeOtherStagesItem" mnemonicParsing="false" onAction="#onCloseOtherStagesItem" text="Закрыть другие окна" />
+               </items>
             </Menu>
         </menus>
       </MenuBar>

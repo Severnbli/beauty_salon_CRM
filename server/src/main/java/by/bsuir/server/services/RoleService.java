@@ -7,11 +7,13 @@ import by.bsuir.server.utils.Nullifable;
 import by.bsuir.tcp.Request;
 import by.bsuir.tcp.Response;
 import by.bsuir.tcp.ResponseStatus;
+import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class RoleService implements Nullifable {
     private RoleDAO roleDAO = new RoleDAO();
-    private Gson gson = new Gson();
+    private Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
 
     public Response roleByAccessLevel(Request req) {
         int accessLevel;

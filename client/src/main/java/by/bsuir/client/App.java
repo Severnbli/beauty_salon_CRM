@@ -1,6 +1,8 @@
 package by.bsuir.client;
 
 import by.bsuir.client.connection.ServerClient;
+import by.bsuir.client.controllers.MainController;
+import by.bsuir.client.controllers.ServiceAppointmentController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -24,6 +26,10 @@ public class App extends Application {
         stage.show();
 
         primaryStage = stage;
+
+        stage.setOnCloseRequest(closeEvent -> {
+            MainController.closeAllOtherStages();
+        });
 
         log.info("Server info: " + ServerClient.getInstance()); // Server initialization
     }
