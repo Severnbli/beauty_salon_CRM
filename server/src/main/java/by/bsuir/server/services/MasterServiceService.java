@@ -134,6 +134,35 @@ public class MasterServiceService implements Nullifable {
         return availableTimes;
     }
 
+    public Response getServicesThatMasterCanPerform(Request req) {
+        Master master = gson.fromJson(req.getData(), Master.class);
+
+        if (master == null) {
+            return Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Ошибка: данные о мастере не разобраны!")
+                    .build();
+        }
+
+        return Response.builder()
+                .status(ResponseStatus.OK)
+                .data(gson.toJson(masterServiceDAO.getServicesThatMasterCanPerform(master.getId())))
+                .build();
+    }
+
+    public Response deleteMasterService(Request req) {
+        MasterService masterService = gson.fromJson(req.getData(), MasterService.class);
+
+        if (masterService == null || masterService.getMaster() == null || masterService.getService() == null) {
+            return Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Ошибка: данные о мастере/услуге не разобраны!")
+                    .build();
+        }
+
+
+    }
+
     @Override
     public void nullify() {
         masterScheduleService.nullify();

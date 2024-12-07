@@ -3,6 +3,7 @@ package by.bsuir.client.controllers;
 import by.bsuir.client.connection.ServerClient;
 import by.bsuir.client.models.Consumable;
 import by.bsuir.client.models.Master;
+import by.bsuir.client.models.MasterService;
 import by.bsuir.client.models.Service;
 import by.bsuir.client.utils.AlertUtil;
 import by.bsuir.client.utils.Setupable;
@@ -22,6 +23,7 @@ import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
+import org.bouncycastle.cert.ocsp.Req;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -56,11 +58,84 @@ public class MasterServicesController implements Setupable {
         }
 
 
+        MasterService masterService = MasterService.builder()
+                .master(master)
+                .service(selectedService)
+                .build();
+
+        final Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
+
+        Request request = Request.builder()
+                .type(RequestType.ADD_MASTER_SERVICE)
+                .data(gson.toJson(masterService))
+                .build();
+
+        Response response = ServerClient.getInstance().makeRequestAndGetResponse(
+                request,
+                STAGE_NAME
+        );
+
+        if (response == null) {
+            return;
+        }
+
+        if (response.getStatus() != ResponseStatus.OK) {
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.ERROR)
+                    .header(STAGE_NAME)
+                    .content(response.getMessage())
+                    .build().realise();
+            return;
+        }
+
+        loadServices();
     }
 
     @FXML
     void toSalon(ActionEvent event) {
+        Service selectedService = masterServices.getSelectionModel().getSelectedItem();
 
+        if (selectedService == null) {
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.WARNING)
+                    .header(STAGE_NAME)
+                    .content("Выберите навык, чтобы от него отказаться!")
+                    .build().realise();
+            return;
+        }
+
+
+        MasterService masterService = MasterService.builder()
+                .master(master)
+                .service(selectedService)
+                .build();
+
+        final Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
+
+        Request request = Request.builder()
+                .type(RequestType.DELETE_MASTER_SERVICE)
+                .data(gson.toJson(masterService))
+                .build();
+
+        Response response = ServerClient.getInstance().makeRequestAndGetResponse(
+                request,
+                STAGE_NAME
+        );
+
+        if (response == null) {
+            return;
+        }
+
+        if (response.getStatus() != ResponseStatus.OK) {
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.ERROR)
+                    .header(STAGE_NAME)
+                    .content(response.getMessage())
+                    .build().realise();
+            return;
+        }
+
+        loadServices();
     }
 
     @Override
@@ -131,6 +206,9 @@ public class MasterServicesController implements Setupable {
                     .header(STAGE_NAME)
                     .content("Не удалось подгрузить данные об мастере!")
                     .build().realise();
+            return;
         }
+
+        master = new Gson().fromJson(response.getData(), Master.class);
     }
 }

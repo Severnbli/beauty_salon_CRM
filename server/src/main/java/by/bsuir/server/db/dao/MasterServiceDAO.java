@@ -2,6 +2,7 @@ package by.bsuir.server.db.dao;
 
 import by.bsuir.server.db.entities.Master;
 import by.bsuir.server.db.entities.MasterService;
+import by.bsuir.server.db.entities.Service;
 import by.bsuir.server.services.DBConnection;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -63,6 +64,25 @@ public class MasterServiceDAO implements DAO<MasterService> {
             return session.createQuery(hql, Master.class)
                     .setParameter("serviceId", serviceId)
                     .getResultList();
+        }
+    }
+
+    public List<Service> getServicesThatMasterCanPerform(Long masterId) {
+        try (Session session = DBConnection.getSessionFactory().openSession()) {
+            return session.createQuery("select ms.service from MasterService ms where ms.master.id = :masterId", Service.class)
+                    .setParameter("masterId", masterId)
+                    .getResultList();
+        }
+    }
+
+    public MasterService getMasterServiceByMasterAndServiceIds(Long masterId, Long serviceId) {
+        try (Session session = DBConnection.getSessionFactory().openSession()) {
+            return session.createQuery("from MasterService where master.id = :masterId and service.id = :serviceId", MasterService.class)
+                    .setParameter("masterId", masterId)
+                    .setParameter("serviceId", serviceId)
+                    .getSingleResult();
+        } catch (jakarta.persistence.NoResultException e) {
+            return null;
         }
     }
 }

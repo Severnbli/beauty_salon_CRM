@@ -19,6 +19,7 @@ module by.bsuir.client {
     requires layout;
     requires org.apache.poi.ooxml;
     requires io;
+    requires org.bouncycastle.pkix;
 
     opens by.bsuir.client.controllers to javafx.fxml;
     opens by.bsuir.client.models to com.google.gson, javafx.base;
