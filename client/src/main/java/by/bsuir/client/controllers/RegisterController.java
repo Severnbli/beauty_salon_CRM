@@ -92,6 +92,8 @@ public class RegisterController {
             return;
         }
 
+        ServerClient.getInstance().makeConnection();
+
         Response response = ServerClient.getInstance().makeRequestAndGetResponse(
                 Request.builder()
                         .type(RequestType.ROLE_BY_ACCESS_LEVEL)
@@ -100,6 +102,8 @@ public class RegisterController {
                 "Регистрация");
 
         if (response == null) {
+            ServerClient.getInstance().closeConnection();
+
             return;
         }
 
@@ -109,6 +113,9 @@ public class RegisterController {
                     .header("Регистрация")
                     .content(response.getMessage())
                     .build().realise();
+
+            ServerClient.getInstance().closeConnection();
+
             return;
         }
 
@@ -137,6 +144,8 @@ public class RegisterController {
                 "Регистрация");
 
         if (response == null) {
+            ServerClient.getInstance().closeConnection();
+
             return;
         }
 
@@ -146,12 +155,16 @@ public class RegisterController {
                     .header("Регистрация")
                     .content(response.getMessage())
                     .build().realise();
+
+            ServerClient.getInstance().closeConnection();
         } else {
             AlertUtil.builder()
                     .alertType(Alert.AlertType.INFORMATION)
                     .header("Регистрация")
                     .content("Регистрация прошла успешно!")
                     .build().realise();
+
+            ServerClient.getInstance().closeConnection();
 
             Stage stage = (Stage) registerButton.getScene().getWindow();
 

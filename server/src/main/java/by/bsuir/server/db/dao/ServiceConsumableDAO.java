@@ -1,5 +1,6 @@
 package by.bsuir.server.db.dao;
 
+import by.bsuir.server.db.entities.Consumable;
 import by.bsuir.server.db.entities.ServiceConsumable;
 import by.bsuir.server.services.DBConnection;
 import org.hibernate.Session;
@@ -53,6 +54,27 @@ public class ServiceConsumableDAO implements DAO<ServiceConsumable> {
     public Long count() {
         try (Session session = DBConnection.getSessionFactory().openSession()) {
             return session.createQuery("select count(*) from ServiceConsumable", Long.class).getSingleResult();
+        }
+    }
+
+    public List<Consumable> getConsumablesByServiceId(Long serviceId) {
+        try (Session session = DBConnection.getSessionFactory().openSession()) {
+            String hql = "select cs.consumable from ServiceConsumable cs where cs.service.id = :serviceId";
+            return session.createQuery(hql, Consumable.class)
+                    .setParameter("serviceId", serviceId)
+                    .getResultList();
+        }
+    }
+
+    public ServiceConsumable getByServiceAndConsumable(ServiceConsumable object) {
+        try (Session session = DBConnection.getSessionFactory().openSession()) {
+            String hql = "from ServiceConsumable where service.id = :serviceId and consumable.id = :consumableId";
+            return session.createQuery(hql, ServiceConsumable.class)
+                    .setParameter("serviceId", object.getService().getId())
+                    .setParameter("consumableId", object.getConsumable().getId())
+                    .getSingleResult();
+        } catch (jakarta.persistence.NoResultException e) {
+            return null;
         }
     }
 }

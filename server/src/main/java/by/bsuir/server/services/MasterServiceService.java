@@ -101,11 +101,13 @@ public class MasterServiceService implements Nullifable {
 
         LocalTime startTime = masterSchedule.getStartTime();
 
-        if (LocalDate.now().isEqual(fromDate) && LocalTime.now().isAfter(startTime)) {
+        LocalTime nowTime = LocalTime.now();
+
+        if (LocalDate.now().isEqual(fromDate) && nowTime.isAfter(startTime)) {
             if (LocalTime.now().getMinute() > 30) {
-                startTime = LocalTime.now().plusMinutes(60 - startTime.getMinute());
+                startTime = nowTime.withHour(nowTime.getHour() + 1).withMinute(0).withSecond(0).withNano(0);
             } else {
-                startTime = LocalTime.now().plusMinutes(30 - startTime.getMinute());
+                startTime = nowTime.withMinute(30).withSecond(0).withNano(0);
             }
         }
 

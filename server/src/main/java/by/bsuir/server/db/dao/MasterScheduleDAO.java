@@ -66,6 +66,8 @@ public class MasterScheduleDAO implements DAO<MasterSchedule> {
                     .setParameter("masterId", masterId)
                     .setParameter("dayOfWeek", dayOfWeek)
                     .getSingleResult();
+        } catch (jakarta.persistence.NoResultException e) {
+            return null;
         }
     }
 }

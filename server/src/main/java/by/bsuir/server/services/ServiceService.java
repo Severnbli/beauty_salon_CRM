@@ -32,6 +32,81 @@ public class ServiceService implements Nullifable {
                 .build();
     }
 
+    public Response addService(Request req) {
+        Service service = gson.fromJson(req.getData(), Service.class);
+
+        if (service == null) {
+            return  Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Ошибка: данные об услуге не разобраны!")
+                    .build();
+        }
+
+        if (serviceDAO.getByName(service.getName()) != null) {
+            return Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Нельзя добавить услугу с существуюшим названием!")
+                    .build();
+        }
+
+        serviceDAO.save(service);
+
+        return Response.builder()
+                .status(ResponseStatus.OK)
+                .message("Услуга успешно добавлена!")
+                .build();
+    }
+
+    public Response delService(Request req) {
+        Service service = gson.fromJson(req.getData(), Service.class);
+
+        if (service == null) {
+            return  Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Ошибка: данные об услуге не разобраны!")
+                    .build();
+        }
+
+        if (serviceDAO.getById(service.getId()) == null) {
+            return Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Услуга не определена.")
+                    .build();
+        }
+
+        serviceDAO.delete(service);
+
+        return Response.builder()
+                .status(ResponseStatus.OK)
+                .message("Услуга удалена успешно!")
+                .build();
+    }
+
+    public Response updateService(Request req) {
+        Service service = gson.fromJson(req.getData(), Service.class);
+
+        if (service == null) {
+            return  Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Ошибка: данные об услуге не разобраны!")
+                    .build();
+        }
+
+        if (serviceDAO.getById(service.getId()) == null) {
+            return Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Услуга не определена.")
+                    .build();
+        }
+
+        serviceDAO.update(service);
+
+        return Response.builder()
+                .status(ResponseStatus.OK)
+                .message("Услуга обновлена успешно!")
+                .build();
+    }
+
     @Override
     public void nullify() {
         gson = null;

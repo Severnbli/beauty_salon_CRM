@@ -25,6 +25,8 @@ public class ClientHandler implements Runnable, Nullifable {
     private ServiceService serviceService;
     private MasterServiceService masterServiceService;
     private MasterServices masterServices;
+    private ConsumableService consumableService;
+    private ServiceConsumableService serviceConsumableService;
 
     public ClientHandler(Socket socket) {
         this.socket = socket;
@@ -39,33 +41,42 @@ public class ClientHandler implements Runnable, Nullifable {
         serviceService = new ServiceService();
         masterServiceService = new MasterServiceService();
         masterServices = new MasterServices();
+        consumableService = new ConsumableService();
+        serviceConsumableService = new ServiceConsumableService();
     }
 
     @Override
     public void run() {
         try {
             clientSetup();
+        } catch (IOException e) {
+            log.error("Attempt to create client object was failed. Session was aborted!");
+            return;
+        }
 
-            while(socket.isConnected()) {
-                operate();
-            }
-        } catch (Exception e) {
-            ServerMain.getClients().remove(socket);
-
-            log.error("Error while operating client: " + e);
-
-            response = Response.builder()
-                    .status(ResponseStatus.ERROR)
-                    .message("Сервер закрыл соединение!")
-                    .build();
-
+        while(socket.isConnected()) {
             try {
-                sendResponse();
-            } catch (IOException responseException) {
-                log.error("Error while writing goodbye response: " + responseException);
+                operate();
+            } catch (IOException e) {
+                log.info("Client IP: " + socket.getInetAddress() + ", PORT: " + socket.getPort() + " disconnected.");
+                ServerMain.getClients().remove(socket);
+                break;
+            } catch (Exception e) {
+                log.error("Error while operating client: " + e);
+
+                response = Response.builder()
+                        .status(ResponseStatus.ERROR)
+                        .message("Сервер закрыл соединение!")
+                        .build();
+
+                try {
+                    sendResponse();
+                } catch (IOException responseException) {
+                    log.error("Error while writing bad response: " + responseException);
+                } finally {
+                    nullify();
+                }
             }
-        } finally {
-            nullify();
         }
     }
 
@@ -123,6 +134,50 @@ public class ClientHandler implements Runnable, Nullifable {
                     response = masterServices.getMasterById(request);
                     break;
                 }
+                case GET_ALL_CONSUMABLES: {
+                    response = consumableService.getAllConsumables();
+                    break;
+                }
+                case ADD_CONSUMABLE: {
+                    response = consumableService.addConsumable(request);
+                    break;
+                }
+                case GET_CONSUMABLE_BY_ID: {
+                    response = consumableService.getConsumableById(request);
+                    break;
+                }
+                case DELETE_CONSUMABLE: {
+                    response = consumableService.deleteConsumable(request);
+                    break;
+                }
+                case UPDATE_CONSUMABLE: {
+                    response = consumableService.updateConsumable(request);
+                    break;
+                }
+                case GET_CONSUMABLES_BY_SERVICE: {
+                    response = serviceConsumableService.getConsumablesByService(request);
+                    break;
+                }
+                case ADD_SERVICE: {
+                    response = serviceService.addService(request);
+                    break;
+                }
+                case DELETE_SERVICE: {
+                    response = serviceService.delService(request);
+                    break;
+                }
+                case UPDATE_SERVICE: {
+                    response = serviceService.updateService(request);
+                    break;
+                }
+                case ADD_SERVICE_CONSUMABLE: {
+                    response = serviceConsumableService.addServiceConsumable(request);
+                    break;
+                }
+                case DELETE_SERVICE_CONSUMABLE: {
+                    response = serviceConsumableService.delServiceConsumable(request);
+                    break;
+                }
                 default: {
                     response = Response.builder()
                             .status(ResponseStatus.ERROR)
@@ -144,8 +199,8 @@ public class ClientHandler implements Runnable, Nullifable {
     @Override
     public void nullify() {
         try {
-            in.close();
             out.close();
+            in.close();
             socket.close();
         } catch (IOException e) {
             log.error("Error while closing client streams: " + e);
@@ -163,6 +218,8 @@ public class ClientHandler implements Runnable, Nullifable {
             serviceService.nullify();
             masterServiceService.nullify();
             masterServices.nullify();
+            consumableService.nullify();
+            serviceConsumableService.nullify();
 
             userService = null;
             roleService = null;
@@ -170,6 +227,8 @@ public class ClientHandler implements Runnable, Nullifable {
             serviceService = null;
             masterServiceService = null;
             masterServices = null;
+            consumableService = null;
+            serviceConsumableService = null;
 
             System.gc();
         }

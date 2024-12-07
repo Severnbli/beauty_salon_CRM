@@ -59,7 +59,9 @@ public class UserDAO implements DAO<User> {
     public User getUserWithSuchLogin(String login) {
         try (Session session = DBConnection.getSessionFactory().openSession()) {
             final String hql = "from User where login = :login";
-            return session.createQuery(hql, User.class).setParameter("login", login).uniqueResult();
+            return session.createQuery(hql, User.class).setParameter("login", login).getSingleResult();
+        } catch (jakarta.persistence.NoResultException e) {
+            return null;
         }
     }
 }

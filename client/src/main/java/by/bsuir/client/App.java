@@ -30,7 +30,5 @@ public class App extends Application {
         stage.setOnCloseRequest(closeEvent -> {
             MainController.closeAllOtherStages();
         });
-
-        log.info("Server info: " + ServerClient.getInstance()); // Server initialization
     }
 }

@@ -55,4 +55,14 @@ public class ServiceDAO implements DAO<Service> {
             return session.createQuery("select count(*) from Service", Long.class).getSingleResult();
         }
     }
+
+    public Service getByName(String name) {
+        try (Session session = DBConnection.getSessionFactory().openSession()) {
+            return session.createQuery("from Service where name = :name", Service.class)
+                    .setParameter("name", name)
+                    .getSingleResult();
+        } catch (jakarta.persistence.NoResultException e) {
+            return null;
+        }
+    }
 }

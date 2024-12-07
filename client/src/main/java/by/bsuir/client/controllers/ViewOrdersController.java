@@ -61,7 +61,7 @@ public class ViewOrdersController implements Setupable {
             AlertUtil.builder()
                     .alertType(Alert.AlertType.INFORMATION)
                     .header("Отмена записи")
-                    .content("Для удаления требуется выбрать, что удалять!")
+                    .content("Для отмены требуется выбрать, что отменять!")
                     .build().realise();
             return;
         }
@@ -69,7 +69,7 @@ public class ViewOrdersController implements Setupable {
         ButtonType confirmation = AlertUtil.builder()
                 .alertType(Alert.AlertType.CONFIRMATION)
                 .header("Отмена записи")
-                .content("Вы точно хотите удалить запись " + selectedOrder.getService().getName() + " " +
+                .content("Вы точно хотите отменить запись " + selectedOrder.getService().getName() + " " +
                         selectedOrder.getDate() + "?")
                 .build().realiseWithConfirmation();
 

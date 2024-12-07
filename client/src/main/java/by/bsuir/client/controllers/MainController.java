@@ -144,13 +144,39 @@ public class MainController implements Setupable {
     }
 
     @FXML
-    void onConsumablesItem(ActionEvent event) {
+    void onConsumablesItem(ActionEvent event) throws IOException {
+        if (ConsumableController.getStage() != null) {
+            ConsumableController.getStage().toFront();
+            return;
+        }
 
+        Stage stage = new Stage();
+        otherStages.add(stage);
+
+        stage.setTitle(App.getPrimaryStage().getTitle() + " - Настройка расходников");
+
+        stage.setOnCloseRequest(closeEvent -> {
+            ConsumableController.setStage(null);
+            otherStages.remove(stage);
+        });
+
+        ConsumableController.setStage(stage);
+
+        Loader.loadScene(stage, "/views/admin/consumables.fxml");
+        stage.show();
     }
 
     @FXML
     void onLogOutItem(ActionEvent event) throws IOException {
+        ServerClient.getInstance().closeConnection();
+
         closeAllOtherStages();
+
+        AccountManageController.setStage(null);
+        ConsumableController.setStage(null);
+        ServiceAppointmentController.setStage(null);
+        ServicesController.setStage(null);
+        ViewOrdersController.setStage(null);
 
         ServerClient.getInstance().setUser(null);
 
@@ -197,8 +223,26 @@ public class MainController implements Setupable {
     }
 
     @FXML
-    void onServicesItem(ActionEvent event) {
+    void onServicesItem(ActionEvent event) throws IOException {
+        if (ServicesController.getStage() != null) {
+            ServicesController.getStage().toFront();
+            return;
+        }
 
+        Stage stage = new Stage();
+        otherStages.add(stage);
+
+        stage.setTitle(App.getPrimaryStage().getTitle() + " - Настройка услуг");
+
+        stage.setOnCloseRequest(closeEvent -> {
+            ServicesController.setStage(null);
+            otherStages.remove(stage);
+        });
+
+        ServicesController.setStage(stage);
+
+        Loader.loadScene(stage, "/views/admin/services.fxml");
+        stage.show();
     }
 
     @FXML

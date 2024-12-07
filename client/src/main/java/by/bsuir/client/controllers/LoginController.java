@@ -61,6 +61,8 @@ public class LoginController {
             return;
         }
 
+        ServerClient.getInstance().makeConnection();
+
         User user = User.builder()
                 .login(loginField.getText())
                 .password(passwordField.getText())
@@ -90,6 +92,8 @@ public class LoginController {
                     .header("Авторизация")
                     .content("Пользователя с введёнными данными не существует!")
                     .build().realise();
+
+            ServerClient.getInstance().closeConnection();
         }
     }
 }

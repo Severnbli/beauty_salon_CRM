@@ -24,14 +24,31 @@ public class ServerClient {
     private static final Logger log = Logger.getLogger(ServerClient.class.getName());
 
     @Getter
-    private static final ServerClient instance = new ServerClient();
+    private static ServerClient instance = new ServerClient();
     private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
     @Setter
     private User user;
 
-    ServerClient() {
+    public void closeConnection() {
+        log.info("Closing connection...");
+        try {
+            out.close();
+            in.close();
+            socket.close();
+            log.info("Closing connection complete!");
+        } catch (IOException e) {
+            log.severe("Error while closing connection: " + e);
+        }
+    }
+
+    public void makeConnection() {
+        if (socket != null && !socket.isClosed()) {
+            log.severe("Register attempt to start connection while connection is already open");
+            return;
+        }
+
         final Dotenv dotenv = Dotenv.load();
 
         log.info("Trying to connect to server with credentials: IP("+ dotenv.get("SERVER_IP")
@@ -44,6 +61,8 @@ public class ServerClient {
             log.severe("Failed to establish connection to server. Reason: " + e);
         }
     }
+
+    private ServerClient() {}
 
     public void sendRequest(Request request) throws IOException {
         out.writeObject(request);

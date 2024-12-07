@@ -39,7 +39,7 @@ public class ServerMain {
             clients.add(clientSocket);
 
             log.info(
-                    "Client IP: " + clientSocket.getInetAddress() + ", PORT: " + clientSocket.getLocalPort() +
+                    "Client IP: " + clientSocket.getInetAddress() + ", PORT: " + clientSocket.getPort() +
                     " connected!"
             );
 
