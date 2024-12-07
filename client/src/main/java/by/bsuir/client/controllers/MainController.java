@@ -190,8 +190,26 @@ public class MainController implements Setupable {
     }
 
     @FXML
-    void onMasterSkillButton(ActionEvent event) {
+    void onMasterSkillButton(ActionEvent event) throws IOException {
+        if (MasterServicesController.getStage() != null) {
+            MasterServicesController.getStage().toFront();
+            return;
+        }
 
+        Stage stage = new Stage();
+        otherStages.add(stage);
+
+        stage.setTitle(App.getPrimaryStage().getTitle() + " - Навыки мастера");
+
+        stage.setOnCloseRequest(closeEvent -> {
+            MasterServicesController.setStage(null);
+            otherStages.remove(stage);
+        });
+
+        MasterServicesController.setStage(stage);
+
+        Loader.loadScene(stage, "/views/master/services.fxml");
+        stage.show();
     }
 
     @FXML
@@ -204,7 +222,7 @@ public class MainController implements Setupable {
         Stage stage = new Stage();
         otherStages.add(stage);
 
-        stage.setTitle(App.getPrimaryStage().getTitle() + " - Бронирование услуг");
+        stage.setTitle(App.getPrimaryStage().getTitle() + " - Генерация отчётов");
 
         stage.setOnCloseRequest(closeEvent -> {
             ReportsController.setStage(null);
