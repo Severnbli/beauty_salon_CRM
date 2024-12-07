@@ -134,6 +134,14 @@ public class OrderService implements Nullifable {
         }
     }
 
+    public Response getAllOrders() {
+        return Response.builder()
+                .status(ResponseStatus.OK)
+                .message("Записи успешно получены!")
+                .data(gson.toJson(orderDAO.getAll()))
+                .build();
+    }
+
     @Override
     public void nullify() {
         masterServiceService.nullify();

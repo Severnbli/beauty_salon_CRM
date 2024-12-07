@@ -27,6 +27,7 @@ public class ClientHandler implements Runnable, Nullifable {
     private MasterServices masterServices;
     private ConsumableService consumableService;
     private ServiceConsumableService serviceConsumableService;
+    private MasterScheduleService masterScheduleService;
 
     public ClientHandler(Socket socket) {
         this.socket = socket;
@@ -43,6 +44,7 @@ public class ClientHandler implements Runnable, Nullifable {
         masterServices = new MasterServices();
         consumableService = new ConsumableService();
         serviceConsumableService = new ServiceConsumableService();
+        masterScheduleService = new MasterScheduleService();
     }
 
     @Override
@@ -178,6 +180,18 @@ public class ClientHandler implements Runnable, Nullifable {
                     response = serviceConsumableService.delServiceConsumable(request);
                     break;
                 }
+                case GET_ALL_ORDERS: {
+                    response = orderService.getAllOrders();
+                    break;
+                }
+                case GET_ALL_USERS: {
+                    response = userService.getAllUsers();
+                    break;
+                }
+                case GET_ALL_MASTER_SCHEDULE: {
+                    response = masterScheduleService.getAllMasterSchedules();
+                    break;
+                }
                 default: {
                     response = Response.builder()
                             .status(ResponseStatus.ERROR)
@@ -220,6 +234,7 @@ public class ClientHandler implements Runnable, Nullifable {
             masterServices.nullify();
             consumableService.nullify();
             serviceConsumableService.nullify();
+            masterScheduleService.nullify();
 
             userService = null;
             roleService = null;
@@ -229,6 +244,7 @@ public class ClientHandler implements Runnable, Nullifable {
             masterServices = null;
             consumableService = null;
             serviceConsumableService = null;
+            masterScheduleService = null;
 
             System.gc();
         }

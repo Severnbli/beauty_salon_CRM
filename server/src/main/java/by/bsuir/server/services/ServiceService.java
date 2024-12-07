@@ -17,18 +17,10 @@ public class ServiceService implements Nullifable {
     private ServiceDAO serviceDAO = new ServiceDAO();
 
     public Response getAllServices() {
-        List<Service> services = serviceDAO.getAll();
-
-        if (services.isEmpty()) {
-            return Response.builder()
-                    .status(ResponseStatus.ERROR)
-                    .message("Нет ни одной услуги!")
-                    .build();
-        }
-
         return Response.builder()
                 .status(ResponseStatus.OK)
-                .data(gson.toJson(services))
+                .message("Услуги успешно получены!")
+                .data(gson.toJson(serviceDAO.getAll()))
                 .build();
     }
 

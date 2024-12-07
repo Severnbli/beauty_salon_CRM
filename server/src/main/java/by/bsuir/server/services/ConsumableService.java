@@ -17,20 +17,11 @@ public class ConsumableService implements Nullifable {
     private ConsumableDAO consumableDAO = new ConsumableDAO();
 
     public Response getAllConsumables() {
-        List<Consumable> consumables = consumableDAO.getAll();
-
-        if (consumables.isEmpty()) {
-            return Response.builder()
-                    .status(ResponseStatus.ERROR)
-                    .message("Нет ни одного расходника в базе!")
-                    .build();
-        } else {
-            return Response.builder()
-                    .status(ResponseStatus.OK)
-                    .message("Расходники успешно получены!")
-                    .data(gson.toJson(consumables))
-                    .build();
-        }
+        return Response.builder()
+                .status(ResponseStatus.OK)
+                .message("Расходники успешно получены!")
+                .data(gson.toJson(consumableDAO.getAll()))
+                .build();
     }
 
     public Response addConsumable(Request req) {

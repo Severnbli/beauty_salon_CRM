@@ -5,6 +5,8 @@ import by.bsuir.server.db.entities.DayOfWeek;
 import by.bsuir.server.db.entities.Master;
 import by.bsuir.server.db.entities.MasterSchedule;
 import by.bsuir.server.utils.Nullifable;
+import by.bsuir.tcp.Response;
+import by.bsuir.tcp.ResponseStatus;
 import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -31,6 +33,14 @@ public class MasterScheduleService implements Nullifable {
         }
 
         return mastersSchedules;
+    }
+
+    public Response getAllMasterSchedules() {
+        return Response.builder()
+                .status(ResponseStatus.OK)
+                .message("Расписание мастеров успешно получено!")
+                .data(gson.toJson(masterScheduleDAO.getAll()))
+                .build();
     }
 
     @Override

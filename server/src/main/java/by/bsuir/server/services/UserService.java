@@ -155,6 +155,14 @@ public class UserService implements Nullifable {
                 .build();
     }
 
+    public Response getAllUsers() {
+        return Response.builder()
+                .status(ResponseStatus.OK)
+                .message("Пользователи успешно получены!")
+                .data(gson.toJson(userDao.getAll()))
+                .build();
+    }
+
     @Override
     public void nullify() {
         personDataDao = null;

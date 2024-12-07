@@ -195,8 +195,26 @@ public class MainController implements Setupable {
     }
 
     @FXML
-    void onReportsItem(ActionEvent event) {
+    void onReportsItem(ActionEvent event) throws IOException {
+        if (ReportsController.getStage() != null) {
+            ReportsController.getStage().toFront();
+            return;
+        }
 
+        Stage stage = new Stage();
+        otherStages.add(stage);
+
+        stage.setTitle(App.getPrimaryStage().getTitle() + " - Бронирование услуг");
+
+        stage.setOnCloseRequest(closeEvent -> {
+            ReportsController.setStage(null);
+            otherStages.remove(stage);
+        });
+
+        ReportsController.setStage(stage);
+
+        Loader.loadScene(stage, "/views/admin/reports.fxml");
+        stage.show();
     }
 
     @FXML

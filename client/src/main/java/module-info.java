@@ -12,11 +12,13 @@ module by.bsuir.client {
     requires static lombok;
     requires io.github.cdimascio.dotenv.java;
     requires com.google.gson;
-    requires java.logging;
     requires java.sql;
-    requires java.desktop;
     requires gson.javatime.serialisers;
     requires javafx.base;
+    requires kernel;
+    requires layout;
+    requires org.apache.poi.ooxml;
+    requires io;
 
     opens by.bsuir.client.controllers to javafx.fxml;
     opens by.bsuir.client.models to com.google.gson, javafx.base;
