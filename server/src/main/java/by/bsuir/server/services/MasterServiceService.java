@@ -151,16 +151,63 @@ public class MasterServiceService implements Nullifable {
     }
 
     public Response deleteMasterService(Request req) {
-        MasterService masterService = gson.fromJson(req.getData(), MasterService.class);
+        MasterService masterServiceFromReq = gson.fromJson(req.getData(), MasterService.class);
 
-        if (masterService == null || masterService.getMaster() == null || masterService.getService() == null) {
+        if (masterServiceFromReq == null || masterServiceFromReq.getMaster() == null ||
+                masterServiceFromReq.getService() == null) {
             return Response.builder()
                     .status(ResponseStatus.ERROR)
                     .message("Ошибка: данные о мастере/услуге не разобраны!")
                     .build();
         }
 
+        MasterService masterService = masterServiceDAO.getMasterServiceByMasterAndServiceIds(
+                masterServiceFromReq.getMaster().getId(),
+                masterServiceFromReq.getService().getId()
+        );
 
+        if (masterService == null) {
+            return Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Указанная запись не найдена в БД!")
+                    .build();
+        }
+
+        masterServiceDAO.delete(masterService);
+
+        return Response.builder()
+                .status(ResponseStatus.OK)
+                .build();
+    }
+
+    public Response addMasterService(Request req) {
+        MasterService masterServiceFromReq = gson.fromJson(req.getData(), MasterService.class);
+
+        if (masterServiceFromReq == null || masterServiceFromReq.getMaster() == null ||
+                masterServiceFromReq.getService() == null) {
+            return Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Ошибка: данные о мастере/услуге не разобраны!")
+                    .build();
+        }
+
+        MasterService masterService = masterServiceDAO.getMasterServiceByMasterAndServiceIds(
+                masterServiceFromReq.getMaster().getId(),
+                masterServiceFromReq.getService().getId()
+        );
+
+        if (masterService != null) {
+            return Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Обнаружена попытка повторной вставки в таблицу существующей записи!")
+                    .build();
+        }
+
+        masterServiceDAO.save(masterServiceFromReq);
+
+        return Response.builder()
+                .status(ResponseStatus.OK)
+                .build();
     }
 
     @Override

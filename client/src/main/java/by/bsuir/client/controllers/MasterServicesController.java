@@ -57,7 +57,6 @@ public class MasterServicesController implements Setupable {
             return;
         }
 
-
         MasterService masterService = MasterService.builder()
                 .master(master)
                 .service(selectedService)
@@ -140,8 +139,8 @@ public class MasterServicesController implements Setupable {
 
     @Override
     public void setup() {
-        loadServices();
         loadMaster();
+        loadServices();
     }
 
     private void loadServices() {
@@ -167,6 +166,7 @@ public class MasterServicesController implements Setupable {
 
         request = Request.builder()
                 .type(RequestType.GET_SERVICES_THAT_MASTER_CAN_PERFORM)
+                .data(gson.toJson(master))
                 .build();
 
         response = ServerClient.getInstance().makeRequestAndGetResponse(
@@ -187,8 +187,8 @@ public class MasterServicesController implements Setupable {
 
     private void loadMaster() {
         Request request = Request.builder()
-                .type(RequestType.GET_MASTER_BY_USER)
-                .data(new Gson().toJson(ServerClient.getInstance().getUser()))
+                .type(RequestType.GET_MASTER_BY_ID)
+                .data(ServerClient.getInstance().getUser().getId().toString())
                 .build();
 
         Response response = ServerClient.getInstance().makeRequestAndGetResponse(

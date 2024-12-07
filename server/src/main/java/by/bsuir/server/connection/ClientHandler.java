@@ -192,6 +192,18 @@ public class ClientHandler implements Runnable, Nullifable {
                     response = masterScheduleService.getAllMasterSchedules();
                     break;
                 }
+                case GET_SERVICES_THAT_MASTER_CAN_PERFORM: {
+                    response = masterServiceService.getServicesThatMasterCanPerform(request);
+                    break;
+                }
+                case DELETE_MASTER_SERVICE: {
+                    response = masterServiceService.deleteMasterService(request);
+                    break;
+                }
+                case ADD_MASTER_SERVICE: {
+                    response = masterServiceService.addMasterService(request);
+                    break;
+                }
                 default: {
                     response = Response.builder()
                             .status(ResponseStatus.ERROR)

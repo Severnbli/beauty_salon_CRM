@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TableView fx:id="scheduleTable" prefHeight="250.0" prefWidth="400.0">
+        <columns>
+          <TableColumn fx:id="dayOfWeekColumn" prefWidth="200.0" text="День недели" />
+          <TableColumn fx:id="startTimeColumn" prefWidth="100.0" text="Начало работы" />
+            <TableColumn fx:id="endTimeColumn" prefWidth="100.0" text="Конец работы" />
+        </columns>
+      </TableView>
+      <Button layoutX="137.0" layoutY="335.0" mnemonicParsing="false" onAction="#onSaveButton" prefHeight="50.0" prefWidth="125.0" text="Сохранить">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <TextArea fx:id="infoArea" layoutX="400.0" prefHeight="400.0" prefWidth="200.0" wrapText="true">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </TextArea>
+   </children>
+</AnchorPane>
