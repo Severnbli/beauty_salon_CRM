@@ -6,6 +6,7 @@ import by.bsuir.client.models.Master;
 import by.bsuir.client.models.MasterService;
 import by.bsuir.client.models.Service;
 import by.bsuir.client.utils.AlertUtil;
+import by.bsuir.client.utils.MasterUtils;
 import by.bsuir.client.utils.Setupable;
 import by.bsuir.tcp.Request;
 import by.bsuir.tcp.RequestType;
@@ -139,7 +140,7 @@ public class MasterServicesController implements Setupable {
 
     @Override
     public void setup() {
-        loadMaster();
+        master = MasterUtils.loadMaster(STAGE_NAME);
         loadServices();
     }
 
@@ -183,32 +184,5 @@ public class MasterServicesController implements Setupable {
 
         salonServicesFromDb.removeAll(masterServicesFromDb);
         salonServices.setItems(FXCollections.observableArrayList(salonServicesFromDb));
-    }
-
-    private void loadMaster() {
-        Request request = Request.builder()
-                .type(RequestType.GET_MASTER_BY_ID)
-                .data(ServerClient.getInstance().getUser().getId().toString())
-                .build();
-
-        Response response = ServerClient.getInstance().makeRequestAndGetResponse(
-                request,
-                STAGE_NAME
-        );
-
-        if (response == null) {
-            return;
-        }
-
-        if (response.getStatus() == ResponseStatus.ERROR) {
-            AlertUtil.builder()
-                    .alertType(Alert.AlertType.ERROR)
-                    .header(STAGE_NAME)
-                    .content("Не удалось подгрузить данные об мастере!")
-                    .build().realise();
-            return;
-        }
-
-        master = new Gson().fromJson(response.getData(), Master.class);
     }
 }

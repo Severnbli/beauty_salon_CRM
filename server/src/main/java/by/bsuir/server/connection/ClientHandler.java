@@ -28,6 +28,7 @@ public class ClientHandler implements Runnable, Nullifable {
     private ConsumableService consumableService;
     private ServiceConsumableService serviceConsumableService;
     private MasterScheduleService masterScheduleService;
+    private SecretCodeService secretCodeService;
 
     public ClientHandler(Socket socket) {
         this.socket = socket;
@@ -45,6 +46,7 @@ public class ClientHandler implements Runnable, Nullifable {
         consumableService = new ConsumableService();
         serviceConsumableService = new ServiceConsumableService();
         masterScheduleService = new MasterScheduleService();
+        secretCodeService = new SecretCodeService();
     }
 
     @Override
@@ -56,30 +58,36 @@ public class ClientHandler implements Runnable, Nullifable {
             return;
         }
 
-        while(socket.isConnected()) {
-            try {
-                operate();
-            } catch (IOException e) {
-                log.info("Client IP: " + socket.getInetAddress() + ", PORT: " + socket.getPort() + " disconnected.");
-                ServerMain.getClients().remove(socket);
-                break;
-            } catch (Exception e) {
-                log.error("Error while operating client: " + e);
-
-                response = Response.builder()
-                        .status(ResponseStatus.ERROR)
-                        .message("Сервер закрыл соединение!")
-                        .build();
-
+        try {
+            while (socket.isConnected()) {
                 try {
-                    sendResponse();
-                } catch (IOException responseException) {
-                    log.error("Error while writing bad response: " + responseException);
-                } finally {
-                    nullify();
+                    operate();
+                } catch (IOException e) {
+                    log.info("Client IP: " + socket.getInetAddress() + ", PORT: " + socket.getPort() + " disconnected.");
+                    ServerMain.getClients().remove(socket);
+                    break;
+                } catch (Exception e) {
+                    log.error("Error while operating client: " + e);
+
+                    response = Response.builder()
+                            .status(ResponseStatus.ERROR)
+                            .message("Сервер закрыл соединение!")
+                            .build();
+
+                    try {
+                        sendResponse();
+                    } catch (IOException responseException) {
+                        log.error("Error while writing bad response: " + responseException);
+                    } finally {
+                        nullify();
+                    }
                 }
             }
+        } catch (Exception e) {
+            log.info("Сlient disconnected via exception: " + e);
         }
+
+        ServerMain.getClients().remove(socket);
     }
 
     private void operate() throws IOException, ClassNotFoundException {
@@ -204,6 +212,34 @@ public class ClientHandler implements Runnable, Nullifable {
                     response = masterServiceService.addMasterService(request);
                     break;
                 }
+                case GET_MASTER_SCHEDULES_BY_MASTER: {
+                    response = masterScheduleService.getMasterSchedulesByMaster(request);
+                    break;
+                }
+                case UPDATE_MASTER_SCHEDULES: {
+                    response = masterScheduleService.updateMasterSchedules(request);
+                    break;
+                }
+                case MAKE_SECRET_CODE: {
+                    response = secretCodeService.makeSecretCode(request);
+                    break;
+                }
+                case GET_IS_SECRET_CODE_VALID: {
+                    response = secretCodeService.isSecretCodeValid(request);
+                    break;
+                }
+                case RESET_USER_PASSWORD_VIA_LOGIN: {
+                    response = userService.resetUserPasswordViaLogin(request);
+                    break;
+                }
+                case GET_IS_USER_EXIST_BY_LOGIN: {
+                    response = userService.isUserExistsByLogin(request);
+                    break;
+                }
+                case GET_ALL_ROLES: {
+                    response = roleService.getAllRoles();
+                    break;
+                }
                 default: {
                     response = Response.builder()
                             .status(ResponseStatus.ERROR)
@@ -247,6 +283,7 @@ public class ClientHandler implements Runnable, Nullifable {
             consumableService.nullify();
             serviceConsumableService.nullify();
             masterScheduleService.nullify();
+            secretCodeService.nullify();
 
             userService = null;
             roleService = null;
@@ -257,6 +294,7 @@ public class ClientHandler implements Runnable, Nullifable {
             consumableService = null;
             serviceConsumableService = null;
             masterScheduleService = null;
+            secretCodeService = null;
 
             System.gc();
         }

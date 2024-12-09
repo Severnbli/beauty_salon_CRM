@@ -40,9 +40,6 @@
    <TextField fx:id="lastNameField" maxWidth="300" promptText="Введите фамилию" style="-fx-background-color: #FFFFFF; -fx-border-color: #000000; -fx-border-radius: 5; -fx-padding: 10; -fx-font-size: 14;" />
 
 
-    <TextField fx:id="emailField" maxWidth="300" promptText="Введите email" style="-fx-background-color: #FFFFFF; -fx-border-color: #000000; -fx-border-radius: 5; -fx-padding: 10; -fx-font-size: 14;" />
-
-
     <Separator prefWidth="300" style="-fx-background-color: #CCCCCC;" />
 
 

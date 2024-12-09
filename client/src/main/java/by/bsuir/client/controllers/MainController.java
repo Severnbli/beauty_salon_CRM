@@ -185,8 +185,26 @@ public class MainController implements Setupable {
     }
 
     @FXML
-    void onMasterScheduleItem(ActionEvent event) {
+    void onMasterScheduleItem(ActionEvent event) throws IOException {
+        if (MasterScheduleController.getStage() != null) {
+            MasterScheduleController.getStage().toFront();
+            return;
+        }
 
+        Stage stage = new Stage();
+        otherStages.add(stage);
+
+        stage.setTitle(App.getPrimaryStage().getTitle() + " - Настройка расписания");
+
+        stage.setOnCloseRequest(closeEvent -> {
+            MasterScheduleController.setStage(null);
+            otherStages.remove(stage);
+        });
+
+        MasterScheduleController.setStage(stage);
+
+        Loader.loadScene(stage, "/views/master/schedule.fxml");
+        stage.show();
     }
 
     @FXML
@@ -282,6 +300,29 @@ public class MainController implements Setupable {
     }
 
     @FXML
+    void onUsersItem(ActionEvent event) throws IOException {
+        if (AdminUsersController.getStage() != null) {
+            AdminUsersController.getStage().toFront();
+            return;
+        }
+
+        Stage stage = new Stage();
+        otherStages.add(stage);
+
+        stage.setTitle(App.getPrimaryStage().getTitle() + " - Настройка профиля");
+
+        stage.setOnCloseRequest(closeEvent -> {
+            AdminUsersController.setStage(null);
+            otherStages.remove(stage);
+        });
+
+        AdminUsersController.setStage(stage);
+
+        Loader.loadScene(stage, "/views/admin/users.fxml");
+        stage.show();
+    }
+
+    @FXML
     void onUserAccountItem(ActionEvent event) throws IOException {
         if (AccountManageController.getStage() != null) {
             AccountManageController.getStage().toFront();
@@ -325,10 +366,5 @@ public class MainController implements Setupable {
 
         Loader.loadScene(stage, "/views/general/view_orders.fxml");
         stage.show();
-    }
-
-    @FXML
-    void onUsersItem(ActionEvent event) {
-
     }
 }

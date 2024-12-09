@@ -25,6 +25,8 @@ import lombok.Setter;
 import java.io.IOException;
 
 public class AccountManageController implements Setupable {
+    private static final String STAGE_NAME = "Настройка профиля";
+
     @FXML
     private VBox clientInfoScreen;
 
@@ -52,9 +54,25 @@ public class AccountManageController implements Setupable {
     @FXML
     private Button updateAccountButton;
 
+    @FXML
+    private CheckBox doubleEntryCheckBox;
+
     @Setter
     @Getter
     private static Stage stage;
+
+    @FXML
+    void onDoubleEntryCheckBox() {
+        if (ServerClient.getInstance().getUser().getPersonData().getEmail().isEmpty()) {
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.WARNING)
+                    .header(STAGE_NAME)
+                    .content("Нельзя управлять двойной аутентификацией, когда у тебя не настроена почта!")
+                    .build().realise();
+
+            doubleEntryCheckBox.setDisable(true);
+        }
+    }
 
     @Override
     public void setup() {
@@ -75,6 +93,8 @@ public class AccountManageController implements Setupable {
             loginField.setText(client.getLogin());
             passwordField.setText("");
             confirmPasswordField.setText("");
+
+            doubleEntryCheckBox.setSelected(client.getIsDoubleEntry());
         } else {
             AlertUtil.builder()
                     .alertType(Alert.AlertType.ERROR)
@@ -155,7 +175,7 @@ public class AccountManageController implements Setupable {
             return;
         }
 
-        final User client = ServerClient.getInstance().getUser();
+        final User client = ServerClient.getInstance().getUser().clone();
 
         if (!emailField.getText().equals(client.getPersonData().getEmail()) && !emailField.getText().isEmpty()
         && !EmailValidator.isValid(emailField.getText())) {
@@ -163,6 +183,15 @@ public class AccountManageController implements Setupable {
                     .alertType(Alert.AlertType.WARNING)
                     .header("Настройка профиля")
                     .content("Электронная почта не валидна!")
+                    .build().realise();
+            return;
+        }
+
+        if (emailField.getText().isEmpty() && doubleEntryCheckBox.isSelected()) {
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.WARNING)
+                    .header(STAGE_NAME)
+                    .content("Двойная аутентификация невозможна при отсутствии почты!")
                     .build().realise();
             return;
         }
@@ -176,60 +205,81 @@ public class AccountManageController implements Setupable {
             return;
         }
 
-        if (!firstNameField.getText().equals(client.getPersonData().getFirstName()) ||
-        !lastNameField.getText().equals(client.getPersonData().getLastName()) ||
-        !emailField.getText().equals(client.getPersonData().getEmail()) ||
-        !loginField.getText().equals(client.getLogin()) ||
-        !passwordField.getText().isEmpty()) {
-            client.setLogin(loginField.getText());
-
-            if (!passwordField.getText().isEmpty()) {
-                client.setPassword(passwordField.getText());
-            }
-
-            client.getPersonData().setFirstName(firstNameField.getText());
-            client.getPersonData().setLastName(lastNameField.getText());
-            client.getPersonData().setEmail(emailField.getText());
-
-            final Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
-
-            Request request = Request.builder()
-                    .type(RequestType.UPDATE_PROFILE)
-                    .data(gson.toJson(client))
-                    .build();
-
-            Response response = ServerClient.getInstance().makeRequestAndGetResponse(
-                    request,
-                    "Настройка профиля"
-            );
-
-            if (response == null) {
-                return;
-            }
-
-            if (response.getStatus() == ResponseStatus.ERROR) {
-                AlertUtil.builder()
-                        .alertType(Alert.AlertType.ERROR)
-                        .header("Настройка профиля")
-                        .content(response.getMessage())
-                        .build().realise();
-            } else {
-                AlertUtil.builder()
-                        .alertType(Alert.AlertType.INFORMATION)
-                        .header("Настройка профиля")
-                        .content("Настройка профиля успешна!")
-                        .build().realise();
-
-                ServerClient.getInstance().setUser(gson.fromJson(response.getData(), User.class));
-
-                setup();
-            }
-        } else {
+        if (firstNameField.getText().equals(client.getPersonData().getFirstName()) &&
+                lastNameField.getText().equals(client.getPersonData().getLastName()) &&
+                emailField.getText().equals(client.getPersonData().getEmail()) &&
+                loginField.getText().equals(client.getLogin()) &&
+                passwordField.getText().isEmpty() &&
+                doubleEntryCheckBox.isSelected() == client.getIsDoubleEntry()
+        ) {
             AlertUtil.builder()
                     .alertType(Alert.AlertType.WARNING)
                     .header("Настройка профиля")
                     .content("Вы ничего не изменили!")
                     .build().realise();
+            return;
+        }
+
+        client.setLogin(loginField.getText());
+        client.setIsDoubleEntry(doubleEntryCheckBox.isSelected());
+
+        if (!passwordField.getText().isEmpty()) {
+            client.setPassword(passwordField.getText());
+        }
+
+        client.getPersonData().setFirstName(firstNameField.getText());
+        client.getPersonData().setLastName(lastNameField.getText());
+
+        if (!client.getPersonData().getEmail().equals(emailField.getText())) {
+            if (emailField.getText().isEmpty()) {
+                client.setIsDoubleEntry(false);
+            } else {
+                ConfirmEmailController.makeSecretCode(emailField.getText());
+                if (ConfirmEmailController.getConfirmed(emailField.getText())) {
+                    client.getPersonData().setEmail(emailField.getText());
+                } else {
+                    AlertUtil.builder()
+                            .alertType(Alert.AlertType.WARNING)
+                            .header(STAGE_NAME)
+                            .content("Новую почту не удалось подтвердить!")
+                            .build().realise();
+                    return;
+                }
+            }
+        }
+
+        final Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
+
+        Request request = Request.builder()
+                .type(RequestType.UPDATE_PROFILE)
+                .data(gson.toJson(client))
+                .build();
+
+        Response response = ServerClient.getInstance().makeRequestAndGetResponse(
+                request,
+                "Настройка профиля"
+        );
+
+        if (response == null) {
+            return;
+        }
+
+        if (response.getStatus() == ResponseStatus.ERROR) {
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.ERROR)
+                    .header("Настройка профиля")
+                    .content(response.getMessage())
+                    .build().realise();
+        } else {
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.INFORMATION)
+                    .header("Настройка профиля")
+                    .content("Настройка профиля успешна!")
+                    .build().realise();
+
+            ServerClient.getInstance().setUser(gson.fromJson(response.getData(), User.class));
+
+            setup();
         }
     }
 }

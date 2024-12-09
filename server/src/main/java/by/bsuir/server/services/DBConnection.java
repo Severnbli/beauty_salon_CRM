@@ -30,6 +30,7 @@ public class DBConnection {
                         .addAnnotatedClass(ServiceConsumable.class)
                         .addAnnotatedClass(User.class)
                         .addAnnotatedClass(PersonData.class)
+                        .addAnnotatedClass(SecretCode.class)
                         .buildSessionFactory();
             } catch (Exception e) {
                 log.error("Error while creating the session factory: ", e);

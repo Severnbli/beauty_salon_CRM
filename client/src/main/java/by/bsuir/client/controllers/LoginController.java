@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 
 public class LoginController {
     private static final Logger log = Logger.getLogger(LoginController.class.getName());
+    private static final String STAGE_NAME = "Авторизация";
 
     @FXML
     private Hyperlink forgotPasswordLink;
@@ -40,8 +41,9 @@ public class LoginController {
     private Button regButton;
 
     @FXML
-    void onForgotPassword(ActionEvent event) {
-
+    void onForgotPassword(ActionEvent event) throws IOException {
+        Stage stage = (Stage) loginButton.getScene().getWindow();
+        Loader.loadScene(stage, "/views/general/reset_password.fxml");
     }
 
     @FXML
@@ -55,7 +57,7 @@ public class LoginController {
         if (loginField.getText().isEmpty() || passwordField.getText().isEmpty()) {
             AlertUtil.builder()
                     .alertType(Alert.AlertType.WARNING)
-                    .header("Авторизация")
+                    .header(STAGE_NAME)
                     .content("Заполните логин и пароль!")
                     .build().realise();
             return;
@@ -75,25 +77,46 @@ public class LoginController {
                         .type(RequestType.LOGIN)
                         .data(gson.toJson(user))
                         .build(),
-                "Авторизация");
+                STAGE_NAME);
 
         if (response == null) {
             return;
         }
 
-        if (response.getStatus() == ResponseStatus.OK) {
-            ServerClient.getInstance().setUser(gson.fromJson(response.getData(), User.class));
-            Stage stage = (Stage) loginButton.getScene().getWindow();
-
-            Loader.loadScene(stage, "/views/general/main.fxml");
-        } else {
+        if (response.getStatus() != ResponseStatus.OK) {
             AlertUtil.builder()
                     .alertType(Alert.AlertType.WARNING)
-                    .header("Авторизация")
+                    .header(STAGE_NAME)
                     .content("Пользователя с введёнными данными не существует!")
                     .build().realise();
 
             ServerClient.getInstance().closeConnection();
+
+            return;
         }
+
+        User userFromResponse = gson.fromJson(response.getData(), User.class);
+
+        if (userFromResponse.getIsDoubleEntry()) {
+            ConfirmEmailController.makeSecretCode(userFromResponse.getPersonData().getEmail());
+
+            if (!ConfirmEmailController.getConfirmed(userFromResponse.getPersonData().getEmail())) {
+                AlertUtil.builder()
+                        .alertType(Alert.AlertType.ERROR)
+                        .header(STAGE_NAME)
+                        .content("Двойная аутентификация провалена!")
+                        .build().realise();
+
+                ServerClient.getInstance().closeConnection();
+
+                return;
+            }
+        }
+
+        ServerClient.getInstance().setUser(userFromResponse);
+
+        Stage stage = (Stage) loginButton.getScene().getWindow();
+
+        Loader.loadScene(stage, "/views/general/main.fxml");
     }
 }

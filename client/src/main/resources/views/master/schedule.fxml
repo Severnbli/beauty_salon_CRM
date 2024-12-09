@@ -7,10 +7,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="by.bsuir.client.controllers.MasterScheduleController">
    <children>
-      <TableView fx:id="scheduleTable" prefHeight="250.0" prefWidth="400.0">
+      <TableView fx:id="scheduleTable" editable="true" prefHeight="250.0" prefWidth="400.0">
         <columns>
           <TableColumn fx:id="dayOfWeekColumn" prefWidth="200.0" text="День недели" />
           <TableColumn fx:id="startTimeColumn" prefWidth="100.0" text="Начало работы" />

@@ -4,28 +4,32 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Objects;
 
-@Entity
-@Table(name = "masters")
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class Master {
+@Entity
+@Table(name = "secret_codes")
+public class SecretCode {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.MERGE)
-    @MapsId
-    @JoinColumn(name = "id")
-    private User user;
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String email;
 
-    @Column(length = 400)
-    private String note;
+    @Column(name = "secret_code", nullable = false, columnDefinition = "TEXT")
+    private String secretCode;
 
-    @Column(length = 40)
-    private String grade;
+    @Column(name = "timestamp_of_formation", nullable = false)
+    private LocalDateTime timestampOfFormation;
+
+    @Column(name = "action_time", nullable = false)
+    private LocalTime actionTime;
 
     @Override
     public final boolean equals(Object o) {
@@ -34,8 +38,8 @@ public class Master {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Master master = (Master) o;
-        return getId() != null && Objects.equals(getId(), master.getId());
+        SecretCode that = (SecretCode) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override
@@ -43,4 +47,3 @@ public class Master {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
 }
-

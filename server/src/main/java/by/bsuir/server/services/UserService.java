@@ -1,10 +1,11 @@
 package by.bsuir.server.services;
 
-import by.bsuir.server.db.dao.PersonDataDAO;
-import by.bsuir.server.db.dao.UserDAO;
+import by.bsuir.server.db.dao.*;
+import by.bsuir.server.db.entities.*;
+import by.bsuir.server.utils.EmailSender;
+import by.bsuir.server.utils.Randomizer;
 import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.gson.Gson;
-import by.bsuir.server.db.entities.User;
 import by.bsuir.tcp.ResponseStatus;
 import by.bsuir.tcp.Request;
 import by.bsuir.tcp.Response;
@@ -12,11 +13,13 @@ import by.bsuir.server.utils.Nullifable;
 import com.google.gson.GsonBuilder;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.util.List;
+import java.time.LocalTime;
 
 public class UserService implements Nullifable {
     private PersonDataDAO personDataDao = new PersonDataDAO();
     private UserDAO userDao = new UserDAO();
+    private MasterDAO masterDao = new MasterDAO();
+    private MasterScheduleDAO masterScheduleDAO = new MasterScheduleDAO();
     private Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
 
     public Response login(Request req) {
@@ -109,7 +112,7 @@ public class UserService implements Nullifable {
         if (!user.getPassword().equals(userFromRequest.getPassword())) {
             userFromRequest.setPassword(BCrypt.hashpw(userFromRequest.getPassword(), BCrypt.gensalt()));
         }
-
+        
         userDao.update(userFromRequest);
         personDataDao.update(userFromRequest.getPersonData());
 
@@ -163,11 +166,73 @@ public class UserService implements Nullifable {
                 .build();
     }
 
+    public Response resetUserPasswordViaLogin(Request req) {
+        final User userFromRequest = gson.fromJson(req.getData(), User.class);
+
+        if (userFromRequest == null) {
+            return Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Ошибка: данные о пользователе не разобраны!")
+                    .build();
+        }
+
+        User user = userDao.getUserWithSuchLogin(userFromRequest.getLogin());
+
+        if (user == null) {
+            return Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Указанного пользователя не найдено в БД!")
+                    .build();
+        }
+
+        String newUserPassword = new Randomizer().getRandomString(10);
+
+        user.setPassword(BCrypt.hashpw(newUserPassword, BCrypt.gensalt()));
+        userDao.update(user);
+
+        new Thread(EmailSender.passwordEmail(
+                user.getPersonData().getEmail(),
+                "CRM - Салон красоты",
+                newUserPassword
+        )).start();
+
+        return Response.builder()
+                .status(ResponseStatus.OK)
+                .message("Ваш новый пароль был отправлен вам на почту!")
+                .build();
+    }
+
+    public Response isUserExistsByLogin(Request req) {
+        final User userFromRequest = gson.fromJson(req.getData(), User.class);
+
+        if (userFromRequest == null) {
+            return Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Ошибка: данные о пользователе не разобраны!")
+                    .build();
+        }
+
+        User user = userDao.getUserWithSuchLogin(userFromRequest.getLogin());
+
+        if (user == null) {
+            return Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Указанного пользователя не найдено в БД!")
+                    .build();
+        }
+
+        return Response.builder()
+                .status(ResponseStatus.OK)
+                .data(gson.toJson(user))
+                .build();
+    }
+
     @Override
     public void nullify() {
         personDataDao = null;
         userDao = null;
         gson = null;
+        masterDao = null;
 
         System.gc();
     }

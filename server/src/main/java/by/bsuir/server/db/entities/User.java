@@ -23,6 +23,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(name = "is_double_entry", nullable = false)
+    private Boolean isDoubleEntry;
+
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;

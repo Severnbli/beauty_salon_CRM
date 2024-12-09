@@ -5,7 +5,6 @@ import lombok.Getter;
 @Getter
 public enum StatusOfRecord {
     REGISTERED("Зарегистрирован"),
-    APPROVED("Утверждён"),
     REJECTED("Отменён"),
     EXECUTED("Осуществлён");
 

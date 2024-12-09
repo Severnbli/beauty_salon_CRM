@@ -37,9 +37,6 @@ public class RegisterController {
     private PasswordField confirmPasswordField;
 
     @FXML
-    private TextField emailField;
-
-    @FXML
     private TextField firstNameField;
 
     @FXML
@@ -83,15 +80,6 @@ public class RegisterController {
             return;
         }
 
-        if (!emailField.getText().isEmpty() && !EmailValidator.isValid(emailField.getText())) {
-            AlertUtil.builder()
-                    .alertType(Alert.AlertType.WARNING)
-                    .header("Регистрация")
-                    .content("Проверьте правильность email-адреса!")
-                    .build().realise();
-            return;
-        }
-
         ServerClient.getInstance().makeConnection();
 
         Response response = ServerClient.getInstance().makeRequestAndGetResponse(
@@ -126,7 +114,6 @@ public class RegisterController {
         PersonData personData = PersonData.builder()
                 .firstName(firstNameField.getText())
                 .lastName(lastNameField.getText())
-                .email(emailField.getText())
                 .build();
 
         User user = User.builder()
@@ -134,6 +121,7 @@ public class RegisterController {
                 .password(passwordField.getText())
                 .role(role)
                 .personData(personData)
+                .isDoubleEntry(false)
                 .build();
 
         response = ServerClient.getInstance().makeRequestAndGetResponse(
@@ -141,7 +129,8 @@ public class RegisterController {
                         .type(RequestType.REGISTER)
                         .data(gson.toJson(user))
                         .build(),
-                "Регистрация");
+                "Регистрация"
+        );
 
         if (response == null) {
             ServerClient.getInstance().closeConnection();

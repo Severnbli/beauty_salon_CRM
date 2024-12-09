@@ -11,6 +11,8 @@ import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.List;
+
 public class RoleService implements Nullifable {
     private RoleDAO roleDAO = new RoleDAO();
     private Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
@@ -39,6 +41,15 @@ public class RoleService implements Nullifable {
         return Response.builder()
                 .status(ResponseStatus.OK)
                 .data(gson.toJson(role))
+                .build();
+    }
+
+    public Response getAllRoles() {
+        List<Role> roles = roleDAO.getAll();
+
+        return Response.builder()
+                .status(ResponseStatus.OK)
+                .data(new Gson().toJson(roles))
                 .build();
     }
 

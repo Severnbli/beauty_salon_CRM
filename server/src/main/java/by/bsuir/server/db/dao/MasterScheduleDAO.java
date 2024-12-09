@@ -70,4 +70,12 @@ public class MasterScheduleDAO implements DAO<MasterSchedule> {
             return null;
         }
     }
+
+    public List<MasterSchedule> getMasterSchedulesByMasterId(Long masterId) {
+        try (Session session = DBConnection.getSessionFactory().openSession()) {
+            return session.createQuery("from MasterSchedule where master.id = :masterId", MasterSchedule.class)
+                    .setParameter("masterId", masterId)
+                    .getResultList();
+        }
+    }
 }

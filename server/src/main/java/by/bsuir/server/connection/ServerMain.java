@@ -40,7 +40,7 @@ public class ServerMain {
 
             log.info(
                     "Client IP: " + clientSocket.getInetAddress() + ", PORT: " + clientSocket.getPort() +
-                    " connected!"
+                    " connected! Currently " + clients.size() + " clients!"
             );
 
             new Thread(new ClientHandler(clientSocket)).start();
