@@ -240,6 +240,14 @@ public class ClientHandler implements Runnable, Nullifable {
                     response = roleService.getAllRoles();
                     break;
                 }
+                case GET_ORDERS_BY_MASTER_ID: {
+                    response = orderService.getOrdersByMasterId(request);
+                    break;
+                }
+                case EXECUTE_ORDER: {
+                    response = orderService.executeOrder(request);
+                    break;
+                }
                 default: {
                     response = Response.builder()
                             .status(ResponseStatus.ERROR)

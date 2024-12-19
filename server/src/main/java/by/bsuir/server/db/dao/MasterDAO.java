@@ -19,7 +19,7 @@ public class MasterDAO implements DAO<Master> {
     public void save(Master entity) {
         try (Session session = DBConnection.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
-            session.persist(entity);
+                session.merge(entity);
             tx.commit();
         }
     }

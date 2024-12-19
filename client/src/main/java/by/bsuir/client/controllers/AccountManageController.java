@@ -63,14 +63,14 @@ public class AccountManageController implements Setupable {
 
     @FXML
     void onDoubleEntryCheckBox() {
-        if (ServerClient.getInstance().getUser().getPersonData().getEmail().isEmpty()) {
+        if (ServerClient.getInstance().getUser().getPersonData().getEmail() == null) {
             AlertUtil.builder()
                     .alertType(Alert.AlertType.WARNING)
                     .header(STAGE_NAME)
                     .content("Нельзя управлять двойной аутентификацией, когда у тебя не настроена почта!")
                     .build().realise();
 
-            doubleEntryCheckBox.setDisable(true);
+            doubleEntryCheckBox.setSelected(false);
         }
     }
 
@@ -157,6 +157,8 @@ public class AccountManageController implements Setupable {
 
     @FXML
     void onUpdateAccountButton(ActionEvent event) {
+        final User client = ServerClient.getInstance().getUser().clone();
+
         if (firstNameField.getText().isEmpty()) {
             AlertUtil.builder()
                     .alertType(Alert.AlertType.WARNING)
@@ -164,7 +166,11 @@ public class AccountManageController implements Setupable {
                     .content("Вы не можете удалить себе имя!")
                     .build().realise();
             return;
+        } else {
+            client.getPersonData().setFirstName(firstNameField.getText());
         }
+
+        client.getPersonData().setLastName(lastNameField.getText());
 
         if (loginField.getText().isEmpty()) {
             AlertUtil.builder()
@@ -173,67 +179,32 @@ public class AccountManageController implements Setupable {
                     .content("Вы не можете удалить себе логин!")
                     .build().realise();
             return;
+        } else {
+            client.setLogin(loginField.getText());
         }
 
-        final User client = ServerClient.getInstance().getUser().clone();
+        if (emailField.getText().isEmpty()) {
+            if (doubleEntryCheckBox.isSelected()) {
+                AlertUtil.builder()
+                        .alertType(Alert.AlertType.WARNING)
+                        .header(STAGE_NAME)
+                        .content("Двойная аутентификация невозможна при отсутствии почты!")
+                        .build().realise();
+                return;
+            }
 
-        if (!emailField.getText().equals(client.getPersonData().getEmail()) && !emailField.getText().isEmpty()
-        && !EmailValidator.isValid(emailField.getText())) {
-            AlertUtil.builder()
-                    .alertType(Alert.AlertType.WARNING)
-                    .header("Настройка профиля")
-                    .content("Электронная почта не валидна!")
-                    .build().realise();
-            return;
-        }
+            client.getPersonData().setEmail("");
+        } else {
+            if (!emailField.getText().equals(client.getPersonData().getEmail())) {
+                if (!EmailValidator.isValid(emailField.getText())) {
+                    AlertUtil.builder()
+                            .alertType(Alert.AlertType.WARNING)
+                            .header("Настройка профиля")
+                            .content("Электронная почта не валидна!")
+                            .build().realise();
+                    return;
+                }
 
-        if (emailField.getText().isEmpty() && doubleEntryCheckBox.isSelected()) {
-            AlertUtil.builder()
-                    .alertType(Alert.AlertType.WARNING)
-                    .header(STAGE_NAME)
-                    .content("Двойная аутентификация невозможна при отсутствии почты!")
-                    .build().realise();
-            return;
-        }
-
-        if (!passwordField.getText().equals(confirmPasswordField.getText())) {
-            AlertUtil.builder()
-                    .alertType(Alert.AlertType.WARNING)
-                    .header("Настройка профиля")
-                    .content("Пароли не совпадают!")
-                    .build().realise();
-            return;
-        }
-
-        if (firstNameField.getText().equals(client.getPersonData().getFirstName()) &&
-                lastNameField.getText().equals(client.getPersonData().getLastName()) &&
-                emailField.getText().equals(client.getPersonData().getEmail()) &&
-                loginField.getText().equals(client.getLogin()) &&
-                passwordField.getText().isEmpty() &&
-                doubleEntryCheckBox.isSelected() == client.getIsDoubleEntry()
-        ) {
-            AlertUtil.builder()
-                    .alertType(Alert.AlertType.WARNING)
-                    .header("Настройка профиля")
-                    .content("Вы ничего не изменили!")
-                    .build().realise();
-            return;
-        }
-
-        client.setLogin(loginField.getText());
-        client.setIsDoubleEntry(doubleEntryCheckBox.isSelected());
-
-        if (!passwordField.getText().isEmpty()) {
-            client.setPassword(passwordField.getText());
-        }
-
-        client.getPersonData().setFirstName(firstNameField.getText());
-        client.getPersonData().setLastName(lastNameField.getText());
-
-        if (!client.getPersonData().getEmail().equals(emailField.getText())) {
-            if (emailField.getText().isEmpty()) {
-                client.setIsDoubleEntry(false);
-            } else {
                 ConfirmEmailController.makeSecretCode(emailField.getText());
                 if (ConfirmEmailController.getConfirmed(emailField.getText())) {
                     client.getPersonData().setEmail(emailField.getText());
@@ -246,6 +217,30 @@ public class AccountManageController implements Setupable {
                     return;
                 }
             }
+        }
+
+        client.setIsDoubleEntry(doubleEntryCheckBox.isSelected());
+
+        if (!passwordField.getText().equals(confirmPasswordField.getText())) {
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.WARNING)
+                    .header("Настройка профиля")
+                    .content("Пароли не совпадают!")
+                    .build().realise();
+            return;
+        }
+
+        if (!passwordField.getText().isEmpty()) {
+            client.setPassword(passwordField.getText());
+        }
+
+        if (ServerClient.getInstance().getUser().equals(client)) {
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.WARNING)
+                    .header("Настройка профиля")
+                    .content("Вы ничего не изменили!")
+                    .build().realise();
+            return;
         }
 
         final Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();

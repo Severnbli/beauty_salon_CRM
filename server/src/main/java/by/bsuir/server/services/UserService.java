@@ -14,6 +14,7 @@ import com.google.gson.GsonBuilder;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class UserService implements Nullifable {
     private PersonDataDAO personDataDao = new PersonDataDAO();
@@ -70,6 +71,24 @@ public class UserService implements Nullifable {
         personDataDao.save(userFromRequest.getPersonData());
         userDao.save(userFromRequest);
 
+        if (userFromRequest.getRole().getAccessLevel() == 111) {
+
+            User user = userDao.getUserWithSuchLogin(userFromRequest.getLogin());
+
+            MasterServices masterServices = new MasterServices();
+
+            Response response = masterServices.registerMaster(
+                    Request.builder()
+                            .data(gson.toJson(user))
+                            .build()
+            );
+
+            if (response.getStatus() != ResponseStatus.OK) {
+                userDao.delete(user);
+                return response;
+            }
+        }
+
         if (userDao.getUserWithSuchLogin(userFromRequest.getLogin()) != null) {
             return Response.builder()
                     .status(ResponseStatus.OK)
@@ -112,9 +131,26 @@ public class UserService implements Nullifable {
         if (!user.getPassword().equals(userFromRequest.getPassword())) {
             userFromRequest.setPassword(BCrypt.hashpw(userFromRequest.getPassword(), BCrypt.gensalt()));
         }
-        
-        userDao.update(userFromRequest);
+
         personDataDao.update(userFromRequest.getPersonData());
+        userDao.update(userFromRequest);
+
+        User newUser = userDao.getUserWithSuchLogin(userFromRequest.getLogin());
+
+        if (userFromRequest.getRole().getAccessLevel() == 111 && user.getRole().getAccessLevel() != 111) {
+            MasterServices masterServices = new MasterServices();
+            Response response = masterServices.registerMaster(
+                    Request.builder()
+                            .data(gson.toJson(newUser))
+                            .build()
+            );
+
+            if (response.getStatus() != ResponseStatus.OK) {
+                return response;
+            }
+        } else if (userFromRequest.getRole().getAccessLevel() != 111 && user.getRole().getAccessLevel() == 111) {
+            masterDao.delete(masterDao.getById(newUser.getId()));
+        }
 
         return Response.builder()
                 .status(ResponseStatus.OK)

@@ -14,8 +14,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class MasterScheduleService implements Nullifable {
     private MasterScheduleDAO masterScheduleDAO = new MasterScheduleDAO();
@@ -68,6 +71,38 @@ public class MasterScheduleService implements Nullifable {
 
         for (MasterSchedule masterSchedule : masterSchedules) {
             masterScheduleDAO.update(masterSchedule);
+        }
+
+        return Response.builder()
+                .status(ResponseStatus.OK)
+                .build();
+    }
+
+    public Response setupMasterSchedulesByDefault(Request req) {
+        Master master = gson.fromJson(req.getData(), Master.class);
+
+        if (master == null) {
+            return Response.builder()
+                    .status(ResponseStatus.ERROR)
+                    .message("Данные о мастере не получилось разобрать!")
+                    .build();
+        }
+
+        List<MasterSchedule> masterSchedules = masterScheduleDAO.getMasterSchedulesByMasterId(master.getId());
+
+        Set<DayOfWeek> existingDays = masterSchedules.stream()
+                .map(MasterSchedule::getDayOfWeek)
+                .collect(Collectors.toSet());
+
+        for (DayOfWeek dayOfWeek : DayOfWeek.values()) {
+            if (!existingDays.contains(dayOfWeek)) {
+                MasterSchedule masterSchedule = new MasterSchedule();
+                masterSchedule.setDayOfWeek(dayOfWeek);
+                masterSchedule.setMaster(master);
+                masterSchedule.setStartTime(LocalTime.of(9, 0));
+                masterSchedule.setEndTime(LocalTime.of(18, 0));
+                masterScheduleDAO.save(masterSchedule);
+            }
         }
 
         return Response.builder()

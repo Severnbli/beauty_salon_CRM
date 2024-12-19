@@ -74,4 +74,11 @@ public class OrderDAO implements DAO<Order> {
                     .getResultList();
         }
     }
+
+    public List<Order> getOrdersByMasterId(Long masterId) {
+        try (Session session = DBConnection.getSessionFactory().openSession()) {
+            final String hql = "from Order where master.id = :masterId";
+            return session.createQuery(hql, Order.class).setParameter("masterId", masterId).getResultList();
+        }
+    }
 }

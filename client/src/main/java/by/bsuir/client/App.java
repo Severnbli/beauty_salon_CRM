@@ -1,8 +1,6 @@
 package by.bsuir.client;
 
-import by.bsuir.client.connection.ServerClient;
 import by.bsuir.client.controllers.MainController;
-import by.bsuir.client.controllers.ServiceAppointmentController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

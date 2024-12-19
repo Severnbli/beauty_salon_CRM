@@ -84,6 +84,15 @@ public class ResetPasswordController {
 
         ServerClient.getInstance().makeConnection();
 
+        if (userFromResponse.getPersonData().getEmail() == null) {
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.WARNING)
+                    .header(STAGE_NAME)
+                    .content("У указанного пользователя отсутствует почта!")
+                    .build().realise();
+            return;
+        }
+
         ConfirmEmailController.makeSecretCode(userFromResponse.getPersonData().getEmail());
 
         boolean isConfirmed = ConfirmEmailController.getConfirmed(userFromResponse.getPersonData().getEmail());

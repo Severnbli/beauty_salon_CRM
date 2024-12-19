@@ -2,6 +2,7 @@ package by.bsuir.client.controllers;
 
 import by.bsuir.client.App;
 import by.bsuir.client.connection.ServerClient;
+import by.bsuir.client.models.MasterSchedule;
 import by.bsuir.client.models.User;
 import by.bsuir.client.utils.AlertUtil;
 import by.bsuir.client.utils.Loader;
@@ -67,6 +68,9 @@ public class MainController implements Setupable {
 
     @FXML
     private MenuItem usersItem;
+
+    @FXML
+    private MenuItem graphItem;
 
     @Getter
     private static final List<Stage> otherStages = new ArrayList<>();
@@ -144,6 +148,29 @@ public class MainController implements Setupable {
     }
 
     @FXML
+    void onGraphItem(ActionEvent event) throws IOException {
+        if (GraphController.getStage() != null) {
+            GraphController.getStage().toFront();
+            return;
+        }
+
+        Stage stage = new Stage();
+        otherStages.add(stage);
+
+        stage.setTitle(App.getPrimaryStage().getTitle() + " - График");
+
+        stage.setOnCloseRequest(closeEvent -> {
+            GraphController.setStage(null);
+            otherStages.remove(stage);
+        });
+
+        GraphController.setStage(stage);
+
+        Loader.loadScene(stage, "/views/admin/diagram.fxml");
+        stage.show();
+    }
+
+    @FXML
     void onConsumablesItem(ActionEvent event) throws IOException {
         if (ConsumableController.getStage() != null) {
             ConsumableController.getStage().toFront();
@@ -177,6 +204,11 @@ public class MainController implements Setupable {
         ServiceAppointmentController.setStage(null);
         ServicesController.setStage(null);
         ViewOrdersController.setStage(null);
+        AdminUsersController.setStage(null);
+        MasterScheduleController.setStage(null);
+        MasterServicesController.setStage(null);
+        ReportsController.setStage(null);
+        GraphController.setStage(null);
 
         ServerClient.getInstance().setUser(null);
 
@@ -365,6 +397,52 @@ public class MainController implements Setupable {
         ViewOrdersController.setStage(stage);
 
         Loader.loadScene(stage, "/views/general/view_orders.fxml");
+        stage.show();
+    }
+
+    @FXML
+    void onViewAdminOrders(ActionEvent event) throws IOException {
+        if (AdminViewOrdersController.getStage() != null) {
+            AdminViewOrdersController.getStage().toFront();
+            return;
+        }
+
+        Stage stage = new Stage();
+        otherStages.add(stage);
+
+        stage.setTitle(App.getPrimaryStage().getTitle() + " - Просмотр записей");
+
+        stage.setOnCloseRequest(closeEvent -> {
+            AdminViewOrdersController.setStage(null);
+            otherStages.remove(stage);
+        });
+
+        AdminViewOrdersController.setStage(stage);
+
+        Loader.loadScene(stage, "/views/admin/view_orders.fxml");
+        stage.show();
+    }
+
+    @FXML
+    void onViewMasterOrders(ActionEvent event) throws IOException {
+        if (MasterViewOrdersController.getStage() != null) {
+            MasterViewOrdersController.getStage().toFront();
+            return;
+        }
+
+        Stage stage = new Stage();
+        otherStages.add(stage);
+
+        stage.setTitle(App.getPrimaryStage().getTitle() + " - Просмотр записей");
+
+        stage.setOnCloseRequest(closeEvent -> {
+            MasterViewOrdersController.setStage(null);
+            otherStages.remove(stage);
+        });
+
+        MasterViewOrdersController.setStage(stage);
+
+        Loader.loadScene(stage, "/views/master/view_orders.fxml");
         stage.show();
     }
 }

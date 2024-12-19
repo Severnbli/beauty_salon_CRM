@@ -119,6 +119,7 @@ public class AdminUsersController implements Initializable {
                     .header(STAGE_NAME)
                     .content(response.getMessage())
                     .build().realise();
+            return;
         }
 
         loadTable();
@@ -180,6 +181,8 @@ public class AdminUsersController implements Initializable {
             return;
         }
 
+        User cloneUser = user.clone();
+
         if (!loginField.getText().isEmpty()) {
             user.setLogin(loginField.getText());
         }
@@ -207,6 +210,24 @@ public class AdminUsersController implements Initializable {
             } else {
                 user.setRole(roleComoBox.getValue());
             }
+        }
+
+        if (!UserValidator.isValidUserDataForRegister(user)) {
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.WARNING)
+                    .header(STAGE_NAME)
+                    .content("Пользователь не валиден!")
+                    .build().realise();
+            return;
+        }
+
+        if (user.equals(cloneUser)) {
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.WARNING)
+                    .header(STAGE_NAME)
+                    .content("Вы ничего не изменили!")
+                    .build().realise();
+            return;
         }
 
         Request request = Request.builder()
@@ -329,6 +350,7 @@ public class AdminUsersController implements Initializable {
         Type listType = new TypeToken<List<User>>() {}.getType();
         List<User> users = new Gson().fromJson(response.getData(), listType);
 
+        usersTable.getItems().clear();
         usersTable.setItems(FXCollections.observableArrayList(users));
     }
 }

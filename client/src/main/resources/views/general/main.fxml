@@ -32,12 +32,15 @@
                   <MenuItem fx:id="servicesItem" mnemonicParsing="false" onAction="#onServicesItem" text="Услуги" />
                   <MenuItem fx:id="usersItem" mnemonicParsing="false" onAction="#onUsersItem" text="Аккаунты" />
                   <MenuItem fx:id="reportsItem" mnemonicParsing="false" onAction="#onReportsItem" text="Отчёты" />
+                  <MenuItem fx:id="graphItem" mnemonicParsing="false" onAction="#onGraphItem" text="График" />
+                  <MenuItem mnemonicParsing="false" onAction="#onViewAdminOrders" text="Записи" />
             </items>
           </Menu>
             <Menu fx:id="masterMenu" mnemonicParsing="false" text="Мастерская" visible="false">
               <items>
                 <MenuItem fx:id="masterScheduleItem" mnemonicParsing="false" onAction="#onMasterScheduleItem" text="Расписание" />
                   <MenuItem fx:id="masterSkillItem" mnemonicParsing="false" onAction="#onMasterSkillButton" text="Навыки" />
+                  <MenuItem mnemonicParsing="false" onAction="#onViewMasterOrders" text="Записи" />
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Опции">

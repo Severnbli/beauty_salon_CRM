@@ -1,8 +1,15 @@
+import by.bsuir.server.utils.EmailSender;
 import org.junit.Test;
 
 public class EmailNotifierTest {
     @Test
     public void isCanSendEmail() {
-        assert true;
+        EmailSender emailSender = new EmailSender(
+                "usevaladbuben@gmail.com",
+                "Проверка работоспособности системы оповещения...",
+                ""
+        );
+
+        emailSender.sendEmail();
     }
 }

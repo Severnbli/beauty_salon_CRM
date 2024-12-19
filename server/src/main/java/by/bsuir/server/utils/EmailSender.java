@@ -47,6 +47,11 @@ public class EmailSender implements Runnable {
     }
 
     public void sendEmail() {
+        if (to == null || subject == null || body == null) {
+            log.info("Trying to send email was aborted via blank values!");
+            return;
+        }
+
         Dotenv dotenv = Dotenv.load();
 
         String host = dotenv.get("EMAIL_HOST");

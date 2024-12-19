@@ -1,7 +1,9 @@
 package by.bsuir.server.services;
 
+import by.bsuir.server.db.dao.ConsumableDAO;
 import by.bsuir.server.db.dao.ServiceConsumableDAO;
 import by.bsuir.server.db.entities.Consumable;
+import by.bsuir.server.db.entities.Order;
 import by.bsuir.server.db.entities.Service;
 import by.bsuir.server.db.entities.ServiceConsumable;
 import by.bsuir.server.utils.Nullifable;
@@ -17,6 +19,7 @@ import java.util.List;
 public class ServiceConsumableService implements Nullifable {
     private Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
     private ServiceConsumableDAO serviceConsumableDao = new ServiceConsumableDAO();
+    private ConsumableDAO consumableDao = new ConsumableDAO();
 
     public Response getConsumablesByService(Request req) {
         Service service = gson.fromJson(req.getData(), Service.class);
@@ -88,9 +91,41 @@ public class ServiceConsumableService implements Nullifable {
                 .build();
     }
 
+    synchronized public boolean isAvailableConsumablesAndGetItIsAvailable(Order order) {
+        List<Consumable> consumables = serviceConsumableDao.getConsumablesByServiceId(order.getService().getId());
+
+        boolean isAvailable = true;
+
+        for (Consumable consumable : consumables) {
+            if (consumable.getQuantity() == 0) {
+                isAvailable = false;
+            }
+        }
+
+        if (!isAvailable) {
+            return false;
+        }
+
+        for (Consumable consumable : consumables) {
+            consumable.setQuantity(consumable.getQuantity() - 1);
+            consumableDao.update(consumable);
+        }
+        return true;
+    }
+
+    public void increaseConsumablesFromOrderReject(Order order) {
+        List<Consumable> consumables = serviceConsumableDao.getConsumablesByServiceId(order.getService().getId());
+
+        for (Consumable consumable : consumables) {
+            consumable.setQuantity(consumable.getQuantity() + 1);
+            consumableDao.update(consumable);
+        }
+    }
+
     @Override
     public void nullify() {
         serviceConsumableDao = null;
+        consumableDao = null;
         gson = null;
 
         System.gc();

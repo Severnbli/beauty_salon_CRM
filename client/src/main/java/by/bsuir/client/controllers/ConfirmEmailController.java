@@ -125,6 +125,15 @@ public class ConfirmEmailController {
 
         Gson gson = Converters.registerLocalTime(Converters.registerLocalDateTime(new GsonBuilder())).create();
 
+        if (email == null) {
+            AlertUtil.builder()
+                    .alertType(Alert.AlertType.WARNING)
+                    .header(STAGE_NAME)
+                    .content("Нельзя создать секретный код без почты!")
+                    .build();
+            return;
+        }
+
         Request request = Request.builder()
                 .type(RequestType.MAKE_SECRET_CODE)
                 .data(gson.toJson(secretCode))
