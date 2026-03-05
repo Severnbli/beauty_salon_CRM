@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="by.bsuir.client.controllers.AdminViewOrdersController">
+   <children>
+      <VBox alignment="TOP_CENTER" prefHeight="439.0" prefWidth="600.0" spacing="10.0">
+         <children>
+            <TableView fx:id="ordersTable" prefHeight="350.0" prefWidth="200.0">
+              <columns>
+                <TableColumn fx:id="orderServiceColumn" prefWidth="175.0" text="Услуга" />
+                  <TableColumn fx:id="orderClientColumn" prefWidth="100.0" text="Клиент" />
+                <TableColumn fx:id="orderMasterColumn" prefWidth="125.0" text="Мастер" />
+                  <TableColumn fx:id="orderDateTimeColumn" prefWidth="100.0" text="Дата и время" />
+                  <TableColumn fx:id="orderStatusColumn" prefWidth="100.0" text="Статус" />
+              </columns>
+            </TableView>
+            <Button fx:id="delOrderButton" mnemonicParsing="false" onAction="#onDelOrderButton" text="Отменить запись" />
+            <Button fx:id="executedOrderButton" mnemonicParsing="false" onAction="#onExecutedOrderButton" text="Отметка о выполнении" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

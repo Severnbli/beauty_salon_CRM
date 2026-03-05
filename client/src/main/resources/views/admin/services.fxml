@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane fx:id="awd" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="by.bsuir.client.controllers.ServicesController">
+   <children>
+      <TableView fx:id="servicesTable" layoutX="300.0" prefHeight="400.0" prefWidth="500.0">
+        <columns>
+          <TableColumn fx:id="serviceNameColumn" prefWidth="325.0" text="Наименование" />
+          <TableColumn fx:id="servicePriceColumn" prefWidth="75.0" text="Цена" />
+            <TableColumn fx:id="serviceTimeCostColumn" prefWidth="100.0" text="Длительность" />
+        </columns>
+      </TableView>
+      <Separator layoutY="399.0" prefHeight="0.0" prefWidth="302.0" />
+      <Separator layoutX="397.0" layoutY="399.0" orientation="VERTICAL" prefHeight="200.0" />
+      <TextField fx:id="serviceNameField" layoutX="14.0" layoutY="413.0" prefHeight="26.0" prefWidth="350.0" promptText="Введите название услуги">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="servicePriceField" layoutX="14.0" layoutY="460.0" prefHeight="26.0" prefWidth="150.0" promptText="Введите цену">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </TextField>
+      <ComboBox fx:id="hourComoBox" layoutX="14.0" layoutY="508.0" prefHeight="26.0" prefWidth="80.0" />
+      <ComboBox fx:id="minutesComoBox" layoutX="124.0" layoutY="508.0" prefHeight="26.0" prefWidth="80.0" />
+      <Text layoutX="104.0" layoutY="532.0" strokeType="OUTSIDE" strokeWidth="0.0" text=":">
+         <font>
+            <Font size="43.0" />
+         </font>
+      </Text>
+      <Button fx:id="addServiceButton" layoutX="14.0" layoutY="549.0" mnemonicParsing="false" onAction="#onAddServiceButton" style="-fx-background-color: #6fed9b;" text="Создать">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <Button fx:id="updateServiceButton" layoutX="241.0" layoutY="549.0" mnemonicParsing="false" onAction="#onUpdateServiceButton" style="-fx-background-color: #d6ed6f;" text="Отредактировать">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <Button fx:id="delServiceButton" layoutX="309.0" layoutY="503.0" mnemonicParsing="false" onAction="#onDelServiceButton" style="-fx-background-color: #e06441;" text="Удалить">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <Button fx:id="updateConsumableTableButton" layoutX="90.0" layoutY="352.0" mnemonicParsing="false" onAction="#onUpdateConsumableTableButton" style="-fx-background-color: #bd76e3;" text="Отобразить расходники">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <TableView fx:id="consumablesTable" layoutX="1.0" prefHeight="200.0" prefWidth="275.0">
+        <columns>
+          <TableColumn fx:id="consumableNameColumn" prefWidth="200.0" text="Расходник" />
+          <TableColumn fx:id="consumableQuantityColumn" prefWidth="75.0" text="Остаток" />
+        </columns>
+      </TableView>
+      <Button fx:id="addConsumableButton" layoutX="115.0" layoutY="300.0" mnemonicParsing="false" onAction="#onAddConsumableButton" style="-fx-background-color: #90fcd8;" text="Добавить расходник">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <ComboBox fx:id="consumablesComoBox" layoutX="39.0" layoutY="208.0" prefHeight="26.0" prefWidth="250.0" promptText="Выберите расходник" />
+      <TextArea fx:id="infoArea" editable="false" layoutX="397.0" layoutY="399.0" prefHeight="200.0" prefWidth="398.0" promptText="Тут будет отображаться информация об услуге" wrapText="true">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </TextArea>
+      <Button fx:id="delConsumableButton" layoutX="128.0" layoutY="249.0" mnemonicParsing="false" onAction="#onDelConsumableButton" style="-fx-background-color: #e06441;" text="Удалить расходник">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <Button fx:id="eraseButton" layoutX="309.0" layoutY="456.0" mnemonicParsing="false" onAction="#onEraseButton" style="-fx-background-color: #99b0a8;" text="Стереть">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

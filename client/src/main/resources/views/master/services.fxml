@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="by.bsuir.client.controllers.MasterServicesController">
+   <children>
+      <HBox layoutY="49.0" prefHeight="350.0" prefWidth="600.0">
+         <children>
+            <ListView fx:id="salonServices" prefHeight="200.0" prefWidth="250.0" />
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#toMaster" prefHeight="50.0" prefWidth="50.0" text="&gt;">
+                     <font>
+                        <Font size="22.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#toSalon" prefHeight="50.0" prefWidth="50.0" text="&lt;">
+                     <font>
+                        <Font size="22.0" />
+                     </font>
+                  </Button>
+               </children>
+            </VBox>
+            <ListView fx:id="masterServices" prefHeight="200.0" prefWidth="250.0" />
+         </children>
+      </HBox>
+      <Text layoutX="53.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Услуги салона">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Text layoutX="406.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Личные навыки">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>
