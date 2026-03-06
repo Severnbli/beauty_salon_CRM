@@ -4,7 +4,9 @@
 
 Java server-client app to manage a beauty salon.
 <br>
+<br>
 Killer-feature: two-factor authentication (server can send email to person via Jakarta Mail Api).
+<br>
 <br>
 Other features:
 * Access levels (admin, master, client).
@@ -34,9 +36,5 @@ Other features:
 * [Lombok](https://mvnrepository.com/artifact/org.projectlombok/lombok)
 * [Gson](https://mvnrepository.com/artifact/com.google.code.gson/gson) (extension: [Gson Javatime Serialisers](https://mvnrepository.com/artifact/com.fatboyindustrial.gson-javatime-serialisers/gson-javatime-serialisers))
 * [IText Core](https://mvnrepository.com/artifact/com.itextpdf/itextpdf)
-
-## Getting Started
-
-// TODO: Complete the Getting Started
 
 _License: MIT_
