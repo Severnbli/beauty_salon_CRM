@@ -15,7 +15,7 @@ Other features:
 * Admins can create pdf reports based on salon events and manage all the user accounts.
 * Passwords and secret keys are stored in encrypted form.
 
-### Used tools
+## Used tools
 
 #### Maven-based architecture
 
